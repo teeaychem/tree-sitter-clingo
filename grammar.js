@@ -6,7 +6,8 @@ module.exports = grammar({
                   $.tuple,
                   $.unary_arithmetic_function,
                   $.binary_arithmetic_function,
-                  $.argvec
+                  $.argvec,
+                  $.maybe_conditional_literal,
                   ],
 
   rules: {
@@ -28,7 +29,7 @@ module.exports = grammar({
                                $.number,
                                $.string,
                                /#inf/,
-                               /#sup/
+                               /#sup/,
                                $.variable,
                                $.arithmetic_function,
                                $.interval,
@@ -114,7 +115,11 @@ module.exports = grammar({
               optional(repeat(seq($._comparison_predicate, $.term))),
               seq($._comparison_predicate, $.term))),
 
-      condition: $ => seq(':', $.literal, optional(repeat(seq(',', $.literal)))),
+      condition: $ => prec(1,seq(':', $.literal, optional(repeat(seq(',', $.literal))))),
+
+      maybe_conditional_literal: $ => choice($.literal, $.conditional_literal),
+
+      conditional_literal: $ => seq($.literal, $.condition),
 
       /* aggregates start */
 
@@ -125,7 +130,7 @@ module.exports = grammar({
       upper_guard: $ => seq(optional($._comparison_predicate), $.term),
 
       // yy
-      aggregatefunction: $ => choice('#sum', '#sum+', '#min', '#max', '#count'),
+      aggregatefunction: $ => field('aggregate_function', choice('#sum', '#sum+', '#min', '#max', '#count')),
 
       // yy
       _bodyaggrelem: $ => prec(1, choice(seq(':', optional($.nlitvec)),
@@ -133,7 +138,7 @@ module.exports = grammar({
 
       // yy
       _bodyaggregate: $ => choice(seq('{', '}'),
-                                 seq('{', seq($.literal, optional($.condition), optional(repeat(seq(';', $.literal, optional($.condition))))), '}'),
+                                 seq('{', seq($.maybe_conditional_literal, optional(repeat(seq(';', $.maybe_conditional_literal)))), '}'),
                                  seq($.aggregatefunction, '{', '}'),
                                  seq($.aggregatefunction, '{', seq($._bodyaggrelem, optional(repeat(seq(';', $._bodyaggrelem)))), '}')),
 
@@ -148,10 +153,10 @@ module.exports = grammar({
                                                          seq($._bodyaggregate, $.upper_guard))),
 
       // yy
-      _headaggrelemvec: $ => seq(optional($._ntermvec), ':', $.literal, optional($.condition), optional(repeat(seq(';', optional($._ntermvec), ':', $.literal, optional($.condition))))),
+      _headaggrelemvec: $ => seq(optional($._ntermvec), ':', $.maybe_conditional_literal, optional(repeat(seq(';', optional($._ntermvec), ':', $.maybe_conditional_literal)))),
 
       // yy
-      _altheadaggrelemvec: $ => seq($.literal, optional($.condition), optional(repeat(seq(';', $.literal, optional($.condition))))),
+      _altheadaggrelemvec: $ => seq($.maybe_conditional_literal, optional(repeat(seq(';', $.maybe_conditional_literal)))),
 
       // yy
       _headaggregate: $ => choice(seq('{', '}'),
@@ -172,15 +177,18 @@ module.exports = grammar({
       /* aggregates end */
 
       // yy
-      conjunction: $ => seq($.literal, ':', optional($.nlitvec)),
+      conjunction: $ => choice($.conditional_literal,
+                               seq($.literal, ':', optional($.nlitvec))),
 
       _disjunctionsepelem: $ => choice(seq($.literal, ','),
-                                      seq($.literal, choice(';', '|')),
-                                      seq($.literal, ':', $.nlitvec, choice(';', '|')),
-                                      seq($.literal, ':', ';')),
+                                       seq($.literal, choice(';', '|')),
+                                       seq(choice($.conditional_literal,
+                                                  seq($.literal, ':', $.nlitvec)), choice(';', '|')),
+                                       seq($.literal, ':', ';')),
 
       // yy
-      disjunction: $ => choice(seq($._disjunctionsepelem, optional(repeat($._disjunctionsepelem)), $.literal, optional($.condition)),
+      disjunction: $ => choice(seq($._disjunctionsepelem, optional(repeat($._disjunctionsepelem)), $.maybe_conditional_literal),
+                               $.conditional_literal,
                                seq($.literal, ':', optional($.nlitvec))),
 
       /* rules */
