@@ -2,26 +2,33 @@ module.exports = grammar({
   name: 'clingo',
 
     inline: $ => [
-        // $.dot,
-                  $._body_agg
-    ],
+                  $._body_agg,
+                  $.tuple,
+                  $.unary_arithmetic_function,
+                  $.binary_arithmetic_function,
+                  $.argvec
+                  ],
 
   rules: {
 
       source_file: $ =>
           repeat(choice($.rule,
-                        // $.fact,
-                        // $.integrity_constraint,
+                        $.fact,
+                        $.integrity_constraint,
                         $.comment,
                         $._optimisation,
                         $._statement,
                         $._script)),
 
 
-      // set term higher than symbol to get term as instance of symbol?
       // skip constterm from yy which excludes variables and pools
       // api yy mix
-      term: $ => prec(2,choice($.symbol,
+      term: $ => prec(2,choice('_',
+                               $.function,
+                               $.number,
+                               $.string,
+                               /#inf/,
+                               /#sup/
                                $.variable,
                                $.arithmetic_function,
                                $.interval,
@@ -29,22 +36,14 @@ module.exports = grammar({
                                $.pool,
                                $.external_function)),
 
-      // yy i think this should be right
-      _ntermvec: $ => prec.right(seq($.term, optional(repeat(seq(',', $.term))))), // _ntermvec, non-empty termvec --- i.e. if used also allow empty (wrap in optional)
+      // yy i think this should be right, non-empty termvec --- i.e. if used also allow empty (wrap in optional)
+      _ntermvec: $ => prec.right(seq($.term, optional(repeat(seq(',', $.term))))),
 
-      argvec: $ => seq($._ntermvec, optional(repeat(seq(';', $._ntermvec)))), // yy also allows optional
+      // yy also allows optional
+      argvec: $ => seq($._ntermvec, optional(repeat(seq(';', $._ntermvec)))),
 
-      interval: $ => prec.left(seq($.term, '..', $.term)), // api, enforced left
-
-      // aka. terms without variables and interpreted function symbols
-      // no symbolic atoms as unclear what these add
-      symbol: $ => choice( // api
-          '_',
-          $.function,
-          /#inf/,
-          $.number,
-          $.string,
-          /#sup/),
+      // api, enforced left
+      interval: $ => prec.left(seq($.term, '..', $.term)),
 
       function: $ => choice(
           $.identifier,
@@ -53,10 +52,10 @@ module.exports = grammar({
       _arg_function: $ => prec(1,seq($.identifier, '(', optional($.argvec), ')')),
 
       // yy also allows empty
-      _tuple: $ => choice($._ntermvec, seq($._ntermvec, ','), ','),
+      tuple: $ => choice($._ntermvec, seq($._ntermvec, ','), ','),
 
       // yy
-      pool: $ => seq('(', optional(seq($._tuple, optional(repeat(seq(';', $._tuple))))), ')'),
+      pool: $ => seq('(', optional(seq($.tuple, optional(repeat(seq(';', $.tuple))))), ')'),
 
       string: $ => seq('"', repeat(choice(/[^\"\n]/, /\\[\"n]/)), '"'),
 
@@ -68,11 +67,10 @@ module.exports = grammar({
 
       variable: $ => /[_\']*[A-Z][\'A-Za-z0-9_]*/,
 
-      number: $ => choice(
-          /0|(?:[1-9][0-9]*)/, // decimal
-          /0x[0-9A-Fa-f]+/, // hexadecimal
-          /0o[1-7]+/, // octal
-          /0b[0-1]+/), // binary
+      number: $ => choice(/0|(?:[1-9][0-9]*)/, // decimal
+                          /0x[0-9A-Fa-f]+/, // hexadecimal
+                          /0o[1-7]+/, // octal
+                          /0b[0-1]+/), // binary
 
       external_function: $ => seq('@', $.function), // python functions, etc.
 
@@ -90,33 +88,25 @@ module.exports = grammar({
       // yy, use optional($.nlitvec) for litvec
       nlitvec: $ => seq($.literal, optional(repeat(seq(',', $.literal)))),
 
-      body: $ => $._body,
-
-      _body: $ => choice(
-          seq($.literal, optional(seq(choice(',', ';'), $._body))),
-          seq($.literal, $.condition, optional(seq(';', $._body))),
-          seq(optional($.default_negation),
-              optional($.default_negation),
-              choice($.disjunction, $.lubodyaggregate),
-              optional(seq(choice(',', ';'), $._body)))),
-
       boolean: $ => choice('#true', '#false'),
 
       // yy, inlines unaryargvec for abs case
-      arithmetic_function: $ => choice($._unary_arithmetic_function,
-                                       $._binary_arithmetic_function),
+      arithmetic_function: $ => choice($.unary_arithmetic_function,
+                                       $.binary_arithmetic_function),
 
-      _unary_arithmetic_function: $ => prec(1, choice(seq(choice('-', '~'), $.term),
+      unary_arithmetic_function: $ => prec(1, choice(seq(choice('-', '~'), $.term),
                                                       seq('|', seq($.term, optional(repeat(seq(';', $.term)))), '|'))),
 
-      _binary_arithmetic_function: $ => choice(prec.left(2, seq($.term, // yy
+      // yy
+      binary_arithmetic_function: $ => choice(prec.left(2, seq($.term,
                                                                choice('^', '?', '&', '+', '-', '*', '/', '\\'),
                                                                $.term)),
                                               prec.right(2, seq($.term,
                                                                 choice('**'),
                                                                 $.term))),
 
-      _comparison_predicate: $ => choice('=', '!=', '<', '<=', '>', '>='), // yy
+      // yy
+      _comparison_predicate: $ => choice('=', '!=', '<', '<=', '>', '>='),
 
       // term + rellitvec from the yy
       comparison: $ => prec(1,
@@ -196,8 +186,8 @@ module.exports = grammar({
       /* rules */
 
       // yy as statement
-      // fact: $ => seq($.head, $.dot),
-      // integrity_constraint: $ => seq(':-', $.body, $.dot),
+      fact: $ => seq($.head, $.dot),
+      integrity_constraint: $ => seq(':-', $.body, $.dot),
 
 
       head: $ => choice($.literal,
@@ -307,6 +297,6 @@ module.exports = grammar({
 
       /* other */
 
-      dot: $ => /\./,
+      dot: $ => '.',
   }
 });
