@@ -7,7 +7,9 @@ module.exports = grammar({
                   $.unary_arithmetic_function,
                   $.binary_arithmetic_function,
                   $.argvec,
-                  $.maybe_conditional_literal,
+                  $.optional_conditional_literal,
+                  $.aliased_classical_negation,
+                  $.aliased_default_negation,
                   ],
 
   rules: {
@@ -24,18 +26,20 @@ module.exports = grammar({
 
       // skip constterm from yy which excludes variables and pools
       // api yy mix
-      term: $ => prec(2,choice('_',
-                               $.function,
-                               $.number,
-                               $.string,
-                               /#inf/,
-                               /#sup/,
-                               $.variable,
-                               $.arithmetic_function,
-                               $.interval,
-                               $.function,
-                               $.pool,
-                               $.external_function)),
+      term: $ => choice($.interval,
+                        $.arithmetic_function,
+                        $.function,
+                        $.external_function,
+                        // symbols
+                        $.number,
+                        $.string,
+                        /#inf/,
+                        /#sup/,
+                        '_',
+                        // symbols done
+                        $.variable,
+                        $.pool,
+                        ),
 
       // yy i think this should be right, non-empty termvec --- i.e. if used also allow empty (wrap in optional)
       _ntermvec: $ => prec.right(seq($.term, optional(repeat(seq(',', $.term))))),
@@ -60,9 +64,9 @@ module.exports = grammar({
 
       string: $ => seq('"', repeat(choice(/[^\"\n]/, /\\[\"n]/)), '"'),
 
-      default_negation: $ => 'not',
+      aliased_default_negation: $ => alias('not', $.default_negation),
 
-      classical_negation: $ => '-',
+      aliased_classical_negation: $ => alias('-', $.classical_negation),
 
       identifier: $ => /_*[a-z][A-Za-z0-9_\']*/, // includes defualt and override from the api
 
@@ -75,13 +79,15 @@ module.exports = grammar({
 
       external_function: $ => seq('@', $.function), // python functions, etc.
 
-      atom: $ => seq(optional($.classical_negation), $.function),
+      atom: $ =>  seq(optional($.aliased_classical_negation), $.function),
+
+      // seq(optional(field('aliased_classical_negation', '-')), field('function', $.function)),
 
       // no explicit conditional literals as then ambiguous between literal and conditional literal.
       // instead, easy to check whether condition follows
       literal: $ => // api
-          seq(optional($.default_negation),
-              optional($.default_negation),
+          seq(optional($.aliased_default_negation),
+              optional($.aliased_default_negation),
               choice($.boolean,
                      $.atom,
                      $.comparison)),
@@ -96,7 +102,7 @@ module.exports = grammar({
                                        $.binary_arithmetic_function),
 
       unary_arithmetic_function: $ => prec(1, choice(seq(choice('-', '~'), $.term),
-                                                      seq('|', seq($.term, optional(repeat(seq(';', $.term)))), '|'))),
+                                                     seq('|', seq(optional(repeat(seq($.term, ';'))), $.term), '|'))),
 
       // yy
       binary_arithmetic_function: $ => choice(prec.left(2, seq($.term,
@@ -107,27 +113,27 @@ module.exports = grammar({
                                                                 $.term))),
 
       // yy
-      _comparison_predicate: $ => choice('=', '!=', '<', '<=', '>', '>='),
+      comparison_predicate: $ => choice('=', '!=', '<', '<=', '>', '>='),
 
       // term + rellitvec from the yy
       comparison: $ => prec(1,
           seq($.term,
-              optional(repeat(seq($._comparison_predicate, $.term))),
-              seq($._comparison_predicate, $.term))),
+              optional(repeat(seq($.comparison_predicate, $.term))),
+              seq($.comparison_predicate, $.term))),
 
       condition: $ => prec(1,seq(':', $.literal, optional(repeat(seq(',', $.literal))))),
 
-      maybe_conditional_literal: $ => choice($.literal, $.conditional_literal),
+      optional_conditional_literal: $ => choice($.literal, $.conditional_literal),
 
       conditional_literal: $ => seq($.literal, $.condition),
 
       /* aggregates start */
 
       // not in yy, but pair to upper guard
-      lower_guard: $ => seq($.term, optional($._comparison_predicate)),
+      lower_guard: $ => seq($.term, optional($.comparison_predicate)),
 
       // upper in yy and optional, so should wrap here
-      upper_guard: $ => seq(optional($._comparison_predicate), $.term),
+      upper_guard: $ => seq(optional($.comparison_predicate), $.term),
 
       // yy
       aggregatefunction: $ => field('aggregate_function', choice('#sum', '#sum+', '#min', '#max', '#count')),
@@ -135,12 +141,6 @@ module.exports = grammar({
       // yy
       _bodyaggrelem: $ => prec(1, choice(seq(':', optional($.nlitvec)),
                                         seq($._ntermvec, optional(seq(':', optional($.nlitvec)))))),
-
-      // yy
-      _bodyaggregate: $ => choice(seq('{', '}'),
-                                 seq('{', seq($.maybe_conditional_literal, optional(repeat(seq(';', $.maybe_conditional_literal)))), '}'),
-                                 seq($.aggregatefunction, '{', '}'),
-                                 seq($.aggregatefunction, '{', seq($._bodyaggrelem, optional(repeat(seq(';', $._bodyaggrelem)))), '}')),
 
       // yy but MISSING theory_atom
       lubodyaggregate: $ => choice($._guarded__bodyaggregate_full,
@@ -150,19 +150,20 @@ module.exports = grammar({
       _guarded__bodyaggregate_full: $ => prec(2, seq($.lower_guard, $._bodyaggregate, $.upper_guard)),
 
       _guarded__bodyaggregate_partial: $ => prec(1,choice(seq($.lower_guard, $._bodyaggregate),
-                                                         seq($._bodyaggregate, $.upper_guard))),
+                                                          seq($._bodyaggregate, $.upper_guard))),
 
-      // yy
-      _headaggrelemvec: $ => seq(optional($._ntermvec), ':', $.maybe_conditional_literal, optional(repeat(seq(';', optional($._ntermvec), ':', $.maybe_conditional_literal)))),
-
-      // yy
-      _altheadaggrelemvec: $ => seq($.maybe_conditional_literal, optional(repeat(seq(';', $.maybe_conditional_literal)))),
-
-      // yy
-      _headaggregate: $ => choice(seq('{', '}'),
+      _bodyaggregate: $ => choice(seq('{', '}'),
+                                 seq('{', seq($.optional_conditional_literal, optional(repeat(seq(';', $.optional_conditional_literal)))), '}'),
                                  seq($.aggregatefunction, '{', '}'),
-                                 seq($.aggregatefunction, '{', $._headaggrelemvec, '}'),
-                                 seq('{', $._altheadaggrelemvec, '}')),
+                                 seq($.aggregatefunction, '{', seq($._bodyaggrelem, optional(repeat(seq(';', $._bodyaggrelem)))), '}')),
+
+      // yy
+      _headaggrelemvec: $ => seq(optional($._ntermvec), ':', $.optional_conditional_literal, optional(repeat(seq(';', optional($._ntermvec), ':', $.optional_conditional_literal)))),
+
+      // yy
+      _altheadaggrelemvec: $ => seq($.optional_conditional_literal, optional(repeat(seq(';', $.optional_conditional_literal)))),
+
+
 
       // yy, MISSING theory_atom
       luheadaggregate: $ => choice($._guarded_headaggregate_full,
@@ -173,6 +174,11 @@ module.exports = grammar({
 
       _guarded_headaggregate_partial: $ => prec(1,choice(seq($.lower_guard, $._headaggregate),
                                                          seq($._headaggregate, $.upper_guard))),
+
+      _headaggregate: $ => choice(seq('{', '}'),
+                                 seq($.aggregatefunction, '{', '}'),
+                                 seq($.aggregatefunction, '{', $._headaggrelemvec, '}'),
+                                 seq('{', $._altheadaggrelemvec, '}')),
 
       /* aggregates end */
 
@@ -187,7 +193,7 @@ module.exports = grammar({
                                        seq($.literal, ':', ';')),
 
       // yy
-      disjunction: $ => choice(seq($._disjunctionsepelem, optional(repeat($._disjunctionsepelem)), $.maybe_conditional_literal),
+      disjunction: $ => choice(seq($._disjunctionsepelem, optional(repeat($._disjunctionsepelem)), $.optional_conditional_literal),
                                $.conditional_literal,
                                seq($.literal, ':', optional($.nlitvec))),
 
@@ -199,12 +205,11 @@ module.exports = grammar({
 
 
       head: $ => choice($.literal,
-                        $.luheadaggregate,
+                        alias($.luheadaggregate, $.aggregate),
                         $.disjunction),
 
-      _body_agg: $ => seq(optional($.default_negation), optional($.default_negation), $.lubodyaggregate),
-
-      // body: $ => seq(choice(optional(repeat(seq($.literal, ',')))), $.literal),
+      // inlined
+      _body_agg: $ => seq(optional($.aliased_default_negation), optional($.aliased_default_negation), alias($.lubodyaggregate, $.aggregate)),
 
       body: $ => seq(choice(optional(repeat(choice(seq(choice($.literal, $._body_agg), choice(',', ';')),
                                                    seq($.conjunction, ';'))))), choice($.literal, $._body_agg, $.conjunction)),
@@ -221,17 +226,17 @@ module.exports = grammar({
       _optimise_list_elem: $ => seq($._ntermvec,
                                    optional(seq(':', optional(seq($.literal, optional(repeat(seq(',', $.literal)))))))),
 
-      _optimise_weight: $ => field('weight', seq($.term, optional(seq('@', $.term)))),
+      optimise_weight: $ => field('weight', seq($.term, optional(seq('@', $.term)))),
 
       optimise_statement: $ => seq(
           choice('#maximize', '#minimize', '#maximise', '#minimise'),
           '{',
-          optional(seq($._optimise_weight,
+          optional(seq($.optimise_weight,
                        ',',
                        field('list', $._optimise_list_elem, optional(repeat(seq(';', $._optimise_list_elem)))))),
           '}', $.dot),
 
-      weak_constraint: $ => seq(':~', optional($.body), $.dot, '[', $._optimise_weight, optional(seq(',', $._ntermvec)), ']'),
+      weak_constraint: $ => seq(':~', optional($.body), $.dot, '[', $.optimise_weight, optional(seq(',', $._ntermvec)), ']'),
 
       /* optimisation end */
 
@@ -251,10 +256,10 @@ module.exports = grammar({
 
       // yy
       show_statement: $ => seq(choice(seq('#show', optional(seq($.term, optional(seq(':', $.body))))),
-                                      seq('#showsig', optional($.classical_negation), $.identifier, '/', $.number)),
+                                      seq('#showsig', optional($.aliased_classical_negation), $.identifier, '/', $.number)),
                                $.dot),
       // yy
-      warning_statement: $ => seq('#defined', optional($.classical_negation), $.identifier, '/', $.number, $.dot),
+      warning_statement: $ => seq('#defined', optional($.aliased_classical_negation), $.identifier, '/', $.number, $.dot),
 
       // yy
       binaryargvec: $ => seq($.term, ',', $.term, optional(repeat(seq(';', $.term, ',', $.term)))),
@@ -267,7 +272,7 @@ module.exports = grammar({
 
       // yy
       projection_statement: $ => seq('#project',
-                                     choice(seq(optional($.classical_negation), $.identifier, '/', $.number, $.dot),
+                                     choice(seq(optional($.aliased_classical_negation), $.identifier, '/', $.number, $.dot),
                                             seq($.atom, optional(seq(':', optional($.body))),  $.dot))),
 
       // yy, though term should really be restricted to be a constant term
