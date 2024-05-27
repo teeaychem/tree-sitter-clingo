@@ -139,7 +139,7 @@
       "required": true,
       "types": [
         {
-          "type": "conjunction",
+          "type": "conditional_literal",
           "named": true
         },
         {
@@ -152,6 +152,10 @@
         },
         {
           "type": "lubodyaggregate",
+          "named": true
+        },
+        {
+          "type": "nlitvec",
           "named": true
         }
       ]
@@ -231,7 +235,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "literal",
@@ -254,29 +258,6 @@
         },
         {
           "type": "literal",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "conjunction",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "conditional_literal",
-          "named": true
-        },
-        {
-          "type": "literal",
-          "named": true
-        },
-        {
-          "type": "nlitvec",
           "named": true
         }
       ]
@@ -497,7 +478,7 @@
       "required": true,
       "types": [
         {
-          "type": "conjunction",
+          "type": "conditional_literal",
           "named": true
         },
         {
@@ -510,6 +491,10 @@
         },
         {
           "type": "lubodyaggregate",
+          "named": true
+        },
+        {
+          "type": "nlitvec",
           "named": true
         }
       ]

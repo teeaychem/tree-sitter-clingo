@@ -765,27 +765,40 @@
             "value": ":"
           },
           {
-            "type": "SYMBOL",
-            "name": "literal"
-          },
-          {
             "type": "CHOICE",
             "members": [
               {
-                "type": "REPEAT",
-                "content": {
-                  "type": "SEQ",
-                  "members": [
-                    {
-                      "type": "STRING",
-                      "value": ","
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "literal"
-                    }
-                  ]
-                }
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "literal"
+                  },
+                  {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "REPEAT",
+                        "content": {
+                          "type": "SEQ",
+                          "members": [
+                            {
+                              "type": "STRING",
+                              "value": ","
+                            },
+                            {
+                              "type": "SYMBOL",
+                              "name": "literal"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type": "BLANK"
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "type": "BLANK"
@@ -1418,7 +1431,7 @@
         }
       ]
     },
-    "conjunction": {
+    "_conjunction": {
       "type": "CHOICE",
       "members": [
         {
@@ -1710,50 +1723,32 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "REPEAT",
-                  "content": {
-                    "type": "CHOICE",
+              "type": "REPEAT",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SEQ",
                     "members": [
                       {
-                        "type": "SEQ",
+                        "type": "CHOICE",
                         "members": [
                           {
-                            "type": "CHOICE",
-                            "members": [
-                              {
-                                "type": "SYMBOL",
-                                "name": "literal"
-                              },
-                              {
-                                "type": "SYMBOL",
-                                "name": "_body_agg"
-                              }
-                            ]
+                            "type": "SYMBOL",
+                            "name": "literal"
                           },
                           {
-                            "type": "CHOICE",
-                            "members": [
-                              {
-                                "type": "STRING",
-                                "value": ","
-                              },
-                              {
-                                "type": "STRING",
-                                "value": ";"
-                              }
-                            ]
+                            "type": "SYMBOL",
+                            "name": "_body_agg"
                           }
                         ]
                       },
                       {
-                        "type": "SEQ",
+                        "type": "CHOICE",
                         "members": [
                           {
-                            "type": "SYMBOL",
-                            "name": "conjunction"
+                            "type": "STRING",
+                            "value": ","
                           },
                           {
                             "type": "STRING",
@@ -1762,12 +1757,25 @@
                         ]
                       }
                     ]
+                  },
+                  {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "_conjunction"
+                      },
+                      {
+                        "type": "STRING",
+                        "value": ";"
+                      }
+                    ]
                   }
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
+                ]
+              }
+            },
+            {
+              "type": "BLANK"
             }
           ]
         },
@@ -1784,7 +1792,7 @@
             },
             {
               "type": "SYMBOL",
-              "name": "conjunction"
+              "name": "_conjunction"
             }
           ]
         }
