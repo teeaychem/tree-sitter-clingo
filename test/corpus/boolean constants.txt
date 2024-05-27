@@ -1,0 +1,35 @@
+======================
+The constants as facts
+======================
+
+#true.
+#false.
+
+---
+
+(source_file
+  (fact (literal (boolean)))
+  (fact (literal (boolean))))
+
+
+=============
+Rule with NAF
+=============
+
+#true :- not #false.
+
+---
+
+(source_file
+  (rule (head (literal (boolean)))
+        (body (literal (default_negation) (boolean)))))
+
+
+==================
+Classical negation
+:error
+==================
+
+:- -#true.
+
+---
