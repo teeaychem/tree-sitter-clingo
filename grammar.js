@@ -3,8 +3,6 @@ module.exports = grammar({
 
     inline: $ => [$._body_agg,
                   $.tuple,
-                  $.unary_arithmetic_function,
-                  $.binary_arithmetic_function,
                   $.argvec,
                   $.optional_conditional_literal,
                   $.classical_negation,
@@ -95,14 +93,14 @@ module.exports = grammar({
       boolean: $ => choice('#true', '#false'),
 
       // yy, inlines unaryargvec for abs case
-      arithmetic_function: $ => choice($.unary_arithmetic_function,
-                                       $.binary_arithmetic_function),
+      arithmetic_function: $ => choice($._unary_arithmetic_function,
+                                       $._binary_arithmetic_function),
 
-      unary_arithmetic_function: $ => prec(1, choice(seq(choice('-', '~'), $.term),
+      _unary_arithmetic_function: $ => prec(1, choice(seq(choice('-', '~'), $.term),
                                                      seq('|', seq(optional(repeat(seq($.term, ';'))), $.term), '|'))),
 
       // yy
-      binary_arithmetic_function: $ => choice(prec.left(2, seq($.term,
+      _binary_arithmetic_function: $ => choice(prec.left(2, seq($.term,
                                                                choice('^', '?', '&', '+', '-', '*', '/', '\\'),
                                                                $.term)),
                                               prec.right(2, seq($.term,
