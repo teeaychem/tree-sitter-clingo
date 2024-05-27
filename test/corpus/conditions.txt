@@ -74,3 +74,32 @@ a :- b : c; d.
         (condition
           (literal (atom (function (identifier))))))
       (literal (atom (function (identifier)))))))
+
+
+============
+Complex body
+============
+
+a :- b : c; d; e : f, g; h : ; i.
+
+---
+
+(source_file
+  (rule
+    (head
+      (literal (atom (function (identifier)))))
+    (body
+      (conditional_literal
+        (literal (atom (function (identifier))))
+        (condition
+          (literal (atom (function (identifier))))))
+        (literal (atom (function (identifier))))
+        (conditional_literal
+          (literal (atom (function (identifier))))
+          (condition
+            (literal (atom (function (identifier))))
+            (literal (atom (function (identifier))))))
+        (conditional_literal
+          (literal (atom (function (identifier))))
+          (condition))
+        (literal (atom (function (identifier)))))))
