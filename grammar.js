@@ -197,9 +197,9 @@ module.exports = grammar({
       /* rules */
 
       // yy as statement
-      fact: $ => seq($._head, $._dot),
+      fact: $ => seq($._head, '.'),
 
-      integrity_constraint: $ => prec(1, seq(':-', $._body, $._dot)),
+      integrity_constraint: $ => prec(1, seq(':-', $._body, '.')),
 
 
       _head: $ => choice($.literal,
@@ -219,7 +219,7 @@ module.exports = grammar({
 
       body: $ => $._body,
 
-      rule: $ => prec(1,seq(optional($.head), ':-', optional($.body), $._dot)),
+      rule: $ => prec(1,seq(optional($.head), ':-', optional($.body), '.')),
 
       /* rules end */
 
@@ -239,9 +239,9 @@ module.exports = grammar({
           optional(seq($.optimise_weight,
                        ',',
                        field('list', $._optimise_list_elem, optional(repeat(seq(';', $._optimise_list_elem)))))),
-          '}', $._dot),
+          '}', '.'),
 
-      weak_constraint: $ => seq(':~', optional($.body), $._dot, '[', $.optimise_weight, optional(seq(',', $._ntermvec)), ']'),
+      weak_constraint: $ => seq(':~', optional($.body), '.', '[', $.optimise_weight, optional(seq(',', $._ntermvec)), ']'),
 
       /* optimisation end */
 
@@ -262,37 +262,37 @@ module.exports = grammar({
       // yy
       show_statement: $ => seq(choice(seq('#show', optional(seq($.term, optional(seq(':', $.body))))),
                                       seq('#showsig', optional($.classical_negation), $.identifier, '/', $.number)),
-                               $._dot),
+                               '.'),
       // yy
-      warning_statement: $ => seq('#defined', optional($.classical_negation), $.identifier, '/', $.number, $._dot),
+      warning_statement: $ => seq('#defined', optional($.classical_negation), $.identifier, '/', $.number, '.'),
 
       // yy
       binaryargvec: $ => seq($.term, ',', $.term, optional(repeat(seq(';', $.term, ',', $.term)))),
       // yy
-      edge_statement: $ => seq('#edge', '(', $.binaryargvec, ')', optional(seq(':', optional($.body))),  $._dot),
+      edge_statement: $ => seq('#edge', '(', $.binaryargvec, ')', optional(seq(':', optional($.body))),  '.'),
 
       // yy
-      heuristic_statement: $ => seq('#heuristic', $.atom, optional(seq(':', optional($.body))), $._dot,
+      heuristic_statement: $ => seq('#heuristic', $.atom, optional(seq(':', optional($.body))), '.',
                                     '[', $.term, optional(seq('@', $.term)), ',', $.term, ']'),
 
       // yy
       projection_statement: $ => seq('#project',
-                                     choice(seq(optional($.classical_negation), $.identifier, '/', $.number, $._dot),
-                                            seq($.atom, optional(seq(':', optional($.body))),  $._dot))),
+                                     choice(seq(optional($.classical_negation), $.identifier, '/', $.number, '.'),
+                                            seq($.atom, optional(seq(':', optional($.body))),  '.'))),
 
       // yy, though term should really be restricted to be a constant term
-      const_statement: $ => seq('#const', $.identifier, '=', $.term, $._dot, optional(seq('[', choice('default', 'override'), ']'))),
+      const_statement: $ => seq('#const', $.identifier, '=', $.term, '.', optional(seq('[', choice('default', 'override'), ']'))),
 
       // yy
-      include_statement: $ => seq('#include', choice($.string, seq('<', $.identifier, '>')), $._dot),
+      include_statement: $ => seq('#include', choice($.string, seq('<', $.identifier, '>')), '.'),
 
       // yy
       block_statement: $ => seq('#program',
                                 $.identifier,
-                                optional(seq('(', optional(seq($.identifier, optional(repeat(seq(',', $.identifier))))), ')')),$._dot),
+                                optional(seq('(', optional(seq($.identifier, optional(repeat(seq(',', $.identifier))))), ')')),'.'),
 
       // yy
-      external_statement: $ => seq('#external', $.atom, optional(seq(':', optional($.body))), $._dot, optional(seq('[', $.term, ']'))),
+      external_statement: $ => seq('#external', $.atom, optional(seq(':', optional($.body))), '.', optional(seq('[', $.term, ']'))),
 
       /* script stuff */
       // not yy, and currently incomplete
@@ -314,7 +314,5 @@ module.exports = grammar({
       theoryatom: $ => seq(),
 
       /* other */
-
-      _dot: $ => '.',
   }
 });
