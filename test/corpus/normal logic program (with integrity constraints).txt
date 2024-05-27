@@ -1,0 +1,76 @@
+====
+Rule
+====
+
+a :- b.
+
+---
+
+(source_file
+  (rule
+    (head
+      (literal (atom (function (identifier)))))
+        (body
+          (literal (atom (function (identifier)))))))
+
+
+====
+Fact
+====
+
+a.
+
+----
+
+(source_file
+  (fact
+    (literal (atom (function (identifier))))))
+
+
+==========
+Constraint
+==========
+
+:- b.
+
+----------
+
+(source_file
+  (integrity_constraint
+    (literal (atom (function (identifier))))))
+
+
+==========
+Empty rule
+==========
+
+:- .
+
+----------
+
+(source_file
+  (rule))
+
+
+=============
+All the above
+=============
+
+a :- b.
+a.
+:- b.
+:- .
+
+-------------
+
+(source_file
+  (rule
+    (head
+      (literal (atom (function (identifier)))))
+        (body
+          (literal (atom (function (identifier))))))
+  (fact
+    (literal (atom (function (identifier)))))
+  (integrity_constraint
+    (literal (atom (function (identifier)))))
+  (rule))

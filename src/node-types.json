@@ -24,10 +24,6 @@
           "named": true
         },
         {
-          "type": "nlitvec",
-          "named": true
-        },
-        {
           "type": "term",
           "named": true
         },
@@ -128,10 +124,6 @@
       "required": true,
       "types": [
         {
-          "type": "dot",
-          "named": true
-        },
-        {
           "type": "identifier",
           "named": true
         }
@@ -147,10 +139,6 @@
       "required": true,
       "types": [
         {
-          "type": "aggregate",
-          "named": true
-        },
-        {
           "type": "conjunction",
           "named": true
         },
@@ -160,6 +148,49 @@
         },
         {
           "type": "literal",
+          "named": true
+        },
+        {
+          "type": "lubodyaggregate",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "bodyaggregate",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "aggregatefunction",
+          "named": true
+        },
+        {
+          "type": "conditional_literal",
+          "named": true
+        },
+        {
+          "type": "literal",
+          "named": true
+        },
+        {
+          "type": "lower_guard",
+          "named": true
+        },
+        {
+          "type": "nlitvec",
+          "named": true
+        },
+        {
+          "type": "term",
+          "named": true
+        },
+        {
+          "type": "upper_guard",
           "named": true
         }
       ]
@@ -260,10 +291,6 @@
       "required": true,
       "types": [
         {
-          "type": "dot",
-          "named": true
-        },
-        {
           "type": "identifier",
           "named": true
         },
@@ -312,10 +339,6 @@
         {
           "type": "body",
           "named": true
-        },
-        {
-          "type": "dot",
-          "named": true
         }
       ]
     }
@@ -352,10 +375,6 @@
           "named": true
         },
         {
-          "type": "dot",
-          "named": true
-        },
-        {
           "type": "term",
           "named": true
         }
@@ -367,15 +386,19 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
         {
-          "type": "dot",
+          "type": "disjunction",
           "named": true
         },
         {
-          "type": "head",
+          "type": "literal",
+          "named": true
+        },
+        {
+          "type": "luheadaggregate",
           "named": true
         }
       ]
@@ -409,15 +432,15 @@
       "required": true,
       "types": [
         {
-          "type": "aggregate",
-          "named": true
-        },
-        {
           "type": "disjunction",
           "named": true
         },
         {
           "type": "literal",
+          "named": true
+        },
+        {
+          "type": "luheadaggregate",
           "named": true
         }
       ]
@@ -440,10 +463,6 @@
           "named": true
         },
         {
-          "type": "dot",
-          "named": true
-        },
-        {
           "type": "term",
           "named": true
         }
@@ -455,13 +474,9 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
-        {
-          "type": "dot",
-          "named": true
-        },
         {
           "type": "identifier",
           "named": true
@@ -482,11 +497,19 @@
       "required": true,
       "types": [
         {
-          "type": "body",
+          "type": "conjunction",
           "named": true
         },
         {
-          "type": "dot",
+          "type": "default_negation",
+          "named": true
+        },
+        {
+          "type": "literal",
+          "named": true
+        },
+        {
+          "type": "lubodyaggregate",
           "named": true
         }
       ]
@@ -559,6 +582,36 @@
     "fields": {}
   },
   {
+    "type": "lubodyaggregate",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "bodyaggregate",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "luheadaggregate",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "aggregate",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "nlitvec",
     "named": true,
     "fields": {},
@@ -606,13 +659,9 @@
       }
     },
     "children": {
-      "multiple": true,
-      "required": true,
+      "multiple": false,
+      "required": false,
       "types": [
-        {
-          "type": "dot",
-          "named": true
-        },
         {
           "type": "optimise_weight",
           "named": true
@@ -676,10 +725,6 @@
           "named": true
         },
         {
-          "type": "dot",
-          "named": true
-        },
-        {
           "type": "identifier",
           "named": true
         },
@@ -701,14 +746,10 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "body",
-          "named": true
-        },
-        {
-          "type": "dot",
           "named": true
         },
         {
@@ -724,7 +765,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "body",
@@ -732,10 +773,6 @@
         },
         {
           "type": "classical_negation",
-          "named": true
-        },
-        {
-          "type": "dot",
           "named": true
         },
         {
@@ -912,10 +949,6 @@
           "named": true
         },
         {
-          "type": "dot",
-          "named": true
-        },
-        {
           "type": "identifier",
           "named": true
         },
@@ -936,10 +969,6 @@
       "types": [
         {
           "type": "body",
-          "named": true
-        },
-        {
-          "type": "dot",
           "named": true
         },
         {
@@ -1179,10 +1208,6 @@
   },
   {
     "type": "default_negation",
-    "named": true
-  },
-  {
-    "type": "dot",
     "named": true
   },
   {
