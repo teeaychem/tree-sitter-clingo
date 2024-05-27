@@ -1,0 +1,70 @@
+===================
+Fact (2, semicolon)
+===================
+
+a; b.
+
+----
+
+(source_file
+  (fact
+    (disjunction
+      (literal (atom (function (identifier))))
+      (literal (atom (function (identifier)))))))
+
+
+===============
+Fact (3, comma)
+===============
+
+a, b, c.
+
+----
+
+(source_file
+  (fact
+    (disjunction
+      (literal (atom (function (identifier))))
+      (literal (atom (function (identifier))))
+      (literal (atom (function (identifier)))))))
+
+
+===================
+Rule (4, semicolon)
+===================
+
+d(1); d(2); d(3); d(4) :- body.
+
+---
+
+(source_file
+  (rule
+    (head
+      (disjunction
+        (literal (atom (function (identifier) (term (number)))))
+        (literal (atom (function (identifier) (term (number)))))
+        (literal (atom (function (identifier) (term (number)))))
+        (literal (atom (function (identifier) (term (number)))))))
+    (body
+      (literal (atom (function (identifier)))))))
+
+
+================
+Rule (5, commas)
+================
+
+d(1), d(2), d(3), d(4), d(5) :- body.
+
+---
+
+(source_file
+  (rule
+    (head
+      (disjunction
+        (literal (atom (function (identifier) (term (number)))))
+        (literal (atom (function (identifier) (term (number)))))
+        (literal (atom (function (identifier) (term (number)))))
+        (literal (atom (function (identifier) (term (number)))))
+        (literal (atom (function (identifier) (term (number)))))))
+    (body
+      (literal (atom (function (identifier)))))))
