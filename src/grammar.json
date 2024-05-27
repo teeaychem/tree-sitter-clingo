@@ -505,15 +505,15 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "unary_arithmetic_function"
+          "name": "_unary_arithmetic_function"
         },
         {
           "type": "SYMBOL",
-          "name": "binary_arithmetic_function"
+          "name": "_binary_arithmetic_function"
         }
       ]
     },
-    "unary_arithmetic_function": {
+    "_unary_arithmetic_function": {
       "type": "PREC",
       "value": 1,
       "content": {
@@ -590,7 +590,7 @@
         ]
       }
     },
-    "binary_arithmetic_function": {
+    "_binary_arithmetic_function": {
       "type": "CHOICE",
       "members": [
         {
@@ -2887,8 +2887,6 @@
   "inline": [
     "_body_agg",
     "tuple",
-    "unary_arithmetic_function",
-    "binary_arithmetic_function",
     "argvec",
     "optional_conditional_literal",
     "classical_negation"
