@@ -116,7 +116,7 @@ module.exports = grammar({
               optional(repeat(seq($.comparison_predicate, $.term))),
               seq($.comparison_predicate, $.term))),
 
-      condition: $ => prec(1,seq(':', $.literal, optional(repeat(seq(',', $.literal))))),
+      condition: $ => prec(1,seq(':', optional(seq($.literal, optional(repeat(seq(',', $.literal))))))),
 
       optional_conditional_literal: $ => choice($.literal, $.conditional_literal),
 
@@ -180,7 +180,7 @@ module.exports = grammar({
       /* aggregates end */
 
       // yy
-      conjunction: $ => choice($.conditional_literal,
+      _conjunction: $ => choice($.conditional_literal,
                                seq($.literal, ':', optional($.nlitvec))),
 
       _disjunctionsepelem: $ => choice(seq($.literal, ','),
@@ -213,8 +213,9 @@ module.exports = grammar({
                           optional($.default_negation),
                           $.lubodyaggregate),
 
-      _body: $ => seq(choice(optional(repeat(choice(seq(choice($.literal, $._body_agg), choice(',', ';')),
-                                                    seq($.conjunction, ';'))))), choice($.literal, $._body_agg, $.conjunction)),
+      _body: $ => seq(optional(repeat(choice(seq(choice($.literal, $._body_agg), choice(',', ';')),
+                                             seq($._conjunction, ';')))),
+                      choice($.literal, $._body_agg, $._conjunction)),
 
       body: $ => $._body,
 

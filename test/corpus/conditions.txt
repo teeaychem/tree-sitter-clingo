@@ -1,0 +1,76 @@
+=============
+One condition
+=============
+
+a :- b : c.
+
+---
+
+(source_file
+  (rule
+    (head
+      (literal (atom (function (identifier)))))
+    (body
+      (conditional_literal
+        (literal (atom (function (identifier))))
+        (condition
+          (literal (atom (function (identifier)))))))))
+
+
+================
+Three conditions
+================
+
+a :- b : c, d, e.
+
+---
+
+(source_file
+  (rule
+    (head
+      (literal (atom (function (identifier)))))
+    (body
+      (conditional_literal
+        (literal (atom (function (identifier))))
+        (condition
+          (literal (atom (function (identifier))))
+          (literal (atom (function (identifier))))
+          (literal (atom (function (identifier)))))))))
+
+
+===============
+Empty condition
+===============
+
+a :- b : .
+
+---
+
+(source_file
+  (rule
+    (head
+      (literal (atom (function (identifier)))))
+    (body
+      (conditional_literal
+        (literal (atom (function (identifier))))
+        (condition)))))
+
+
+=============
+With conjunct
+=============
+
+a :- b : c; d.
+
+---
+
+(source_file
+  (rule
+    (head
+      (literal (atom (function (identifier)))))
+    (body
+      (conditional_literal
+        (literal (atom (function (identifier))))
+        (condition
+          (literal (atom (function (identifier))))))
+      (literal (atom (function (identifier)))))))
