@@ -1,0 +1,163 @@
+================================
+Built-in Comparison Predicate: =
+================================
+
+X / X = Y - Y + 1.
+
+---
+
+(source_file
+  (fact
+    (literal
+      (comparison
+        (term (arithmetic_function
+                (term (variable))
+                (term (variable))))
+        (comparison_predicate)
+        (term (arithmetic_function
+                (term
+                  (arithmetic_function
+                    (term (variable))
+                    (term (variable))))
+                (term (number))))))))
+
+
+=================================
+Built-in Comparison Predicate: !=
+=================================
+
+- X != Y \ Z.
+
+---
+
+(source_file
+  (fact
+    (literal
+      (comparison
+        (term
+          (arithmetic_function
+            (term (variable))))
+        (comparison_predicate)
+        (term
+          (arithmetic_function
+            (term (variable))
+            (term (variable))))))))
+
+
+================================
+Built-in Comparison Predicate: <
+================================
+
+| ~ X | < Y ** Z.
+
+---
+
+(source_file
+  (fact
+    (literal
+      (comparison
+        (term
+          (arithmetic_function
+            (term
+              (arithmetic_function
+                    (term (variable))))))
+            (comparison_predicate)
+            (term
+              (arithmetic_function
+                (term (variable))
+                (term (variable))))))))
+
+
+=================================
+Built-in Comparison Predicate: >=
+=================================
+
+geq(X,Y) :- X >= Y.
+
+---
+
+(source_file
+  (rule
+    (head
+      (literal
+        (atom (function
+                (identifier)
+                (term (variable))
+                (term (variable))))))
+    (body
+      (literal
+        (comparison
+          (term (variable))
+          (comparison_predicate)
+          (term (variable)))))))
+
+
+=======
+Squares
+=======
+
+squares(XX,YY) :- XX = X*X, Y*Y = YY, Y'-1 = Y, Y'*Y' = XX+YY, num(X), num(Y), X < Y.
+
+---
+
+
+(source_file
+  (rule
+    (head
+      (literal
+        (atom
+          (function
+            (identifier)
+            (term (variable))
+            (term (variable))))))
+    (body
+      (literal
+        (comparison
+          (term (variable))
+          (comparison_predicate)
+          (term
+            (arithmetic_function
+              (term (variable))
+              (term (variable))))))
+      (literal
+        (comparison
+          (term
+            (arithmetic_function
+              (term (variable))
+              (term (variable))))
+          (comparison_predicate)
+          (term (variable))))
+      (literal
+        (comparison
+          (term
+            (arithmetic_function
+              (term (variable))
+              (term (number))))
+          (comparison_predicate)
+      (term (variable))))
+      (literal
+        (comparison
+          (term
+            (arithmetic_function
+              (term (variable))
+              (term (variable))))
+          (comparison_predicate)
+          (term
+            (arithmetic_function
+              (term (variable))
+              (term (variable))))))
+      (literal
+        (atom
+          (function
+            (identifier)
+            (term (variable)))))
+      (literal
+        (atom
+          (function
+            (identifier)
+            (term (variable)))))
+      (literal
+        (comparison
+          (term (variable))
+          (comparison_predicate)
+          (term (variable)))))))

@@ -231,7 +231,11 @@ module.exports = grammar({
       _optimise_list_elem: $ => seq($._ntermvec,
                                    optional(seq(':', optional(seq($.literal, optional(repeat(seq(',', $.literal)))))))),
 
-      optimise_weight: $ => field('weight', seq($.term, optional(seq('@', $.term)))),
+      priority: $ => seq('@', $.term),
+
+      weight: $ => $.term,
+
+      optimise_weight: $ => seq($.weight, optional($.priority)),
 
       optimise_statement: $ => seq(
           choice('#maximize', '#minimize', '#maximise', '#minimise'),
