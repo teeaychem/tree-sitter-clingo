@@ -657,21 +657,20 @@
   {
     "type": "optimise_weight",
     "named": true,
-    "fields": {
-      "weight": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "@",
-            "named": false
-          },
-          {
-            "type": "term",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "priority",
+          "named": true
+        },
+        {
+          "type": "weight",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -681,6 +680,21 @@
     "children": {
       "multiple": true,
       "required": false,
+      "types": [
+        {
+          "type": "term",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "priority",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
       "types": [
         {
           "type": "term",
@@ -960,6 +974,21 @@
           "type": "optimise_weight",
           "named": true
         },
+        {
+          "type": "term",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "weight",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
         {
           "type": "term",
           "named": true

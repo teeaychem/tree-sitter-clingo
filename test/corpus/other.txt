@@ -1,0 +1,31 @@
+=========
+Intervals
+=========
+
+grid(1..S,Y) :- X = 1..S, Y = 1..S - 1, size(S).
+
+---
+
+(source_file
+  (rule
+    (head
+      (literal
+        (atom (function
+                (identifier)
+                (term (interval (term (number)) (term (variable))))
+                (term (variable))))))
+    (body
+      (literal
+        (comparison
+          (term (variable))
+          (comparison_predicate)
+          (term (interval (term (number)) (term (variable))))))
+        (literal
+          (comparison
+            (term (variable))
+            (comparison_predicate)
+            (term (interval (term (number)) (term (arithmetic_function (term (variable)) (term (number))))))))
+        (literal
+          (atom (function
+                  (identifier)
+                  (term (variable))))))))
