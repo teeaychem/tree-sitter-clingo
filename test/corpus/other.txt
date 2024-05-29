@@ -24,7 +24,7 @@ grid(1..S,Y) :- X = 1..S, Y = 1..S - 1, size(S).
           (comparison
             (term (variable))
             (comparison_predicate)
-            (term (interval (term (number)) (term (arithmetic_function (term (variable)) (term (number))))))))
+            (term (interval (term (number)) (term (minus (term (variable)) (term (number))))))))
         (literal
           (atom (function
                   (identifier)
