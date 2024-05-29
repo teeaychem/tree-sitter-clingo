@@ -103,3 +103,36 @@ Complex
         (upper_guard
           (comparison_predicate)
           (term (number)))))))
+
+
+==============
+Short shortcut
+==============
+
+{ a; b }.
+
+---
+
+(source_file
+  (fact
+    (aggregate
+      (literal (atom (function (identifier))))
+      (literal (atom (function (identifier)))))))
+
+
+===================
+Short shortcut long
+===================
+
+#count { 0,a : a; 0,b : b }.
+
+---
+
+(source_file
+  (fact
+    (aggregate
+      (aggregatefunction)
+      (terms (number) (function (identifier)))
+      (literal (atom (function (identifier))))
+      (terms (number) (function (identifier)))
+      (literal (atom (function (identifier)))))))
