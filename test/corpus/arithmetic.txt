@@ -161,3 +161,24 @@ squares(XX,YY) :- XX = X*X, Y*Y = YY, Y'-1 = Y, Y'*Y' = XX+YY, num(X), num(Y), X
           (term (variable))
           (comparison_predicate)
           (term (variable)))))))
+
+========
+Absolute
+========
+
+absolute(| 1; 2; 3 |).
+
+---
+
+
+(source_file
+  (fact
+    (literal
+      (atom
+        (function
+          (identifier)
+          (term
+            (absolute
+              (term (number))
+              (term (number))
+              (term (number)))))))))
