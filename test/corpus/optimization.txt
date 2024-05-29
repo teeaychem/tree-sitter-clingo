@@ -21,8 +21,9 @@ Maximize
       (atom
         (function
           (identifier)
-          (term (variable))
-          (term (variable)))))))
+          (terms
+            (variable)
+            (variable)))))))
 
 
 ========
@@ -51,14 +52,16 @@ Minimize
       (atom
         (function
           (identifier)
-          (term (variable))
-          (term (variable)))))
+          (terms
+            (variable)
+            (variable)))))
     (literal
       (atom
         (function
           (identifier)
-          (term (variable))
-          (term (variable)))))))
+          (terms
+            (variable)
+            (variable)))))))
 
 
 =================

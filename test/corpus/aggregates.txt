@@ -1,0 +1,105 @@
+=========================
+Body: Count, lower, upper
+=========================
+
+:- 2 < #count { 42 : a; t : not b } < 4.
+
+---
+
+(source_file
+  (integrity_constraint
+    (aggregate
+      (lower_guard
+        (term (number))
+        (comparison_predicate))
+      (aggregatefunction)
+      (term (number))
+      (literal (atom (function (identifier))))
+      (term (function (identifier)))
+      (literal (default_negation)
+        (atom (function (identifier))))
+      (upper_guard
+        (comparison_predicate)
+        (term (number))))))
+
+
+================
+Head: Sum, upper
+================
+
+#sum { 42 : a; t : not b } = 4.
+
+---
+
+(source_file
+  (fact
+    (aggregate
+      (aggregatefunction)
+      (term (number))
+      (literal (atom (function (identifier))))
+      (term (function (identifier)))
+      (literal (default_negation)
+        (atom (function (identifier))))
+      (upper_guard
+        (comparison_predicate)
+        (term (number))))))
+
+
+
+=======
+Complex
+=======
+
+#sum+ { 3,1,2 : cost(1,2,3); 3,2,3 : cost(2,3,3) } = 6 :-  #max { 42 : a; t : not b; s : not b } = 2.
+
+---
+
+(source_file
+  (rule
+   (head
+      (aggregate
+        (aggregatefunction)
+        (terms
+          (number)
+          (number)
+          (number))
+        (literal
+          (atom (function (identifier)
+              (terms
+                (number)
+                (number)
+                (number)))))
+        (terms
+          (number)
+          (number)
+          (number))
+        (literal
+          (atom (function (identifier)
+              (terms
+                (number)
+                (number)
+                (number)))))
+        (upper_guard
+          (comparison_predicate)
+          (term
+            (number)))))
+    (body
+      (aggregate
+        (aggregatefunction)
+        (term
+          (number))
+        (literal
+          (atom (function (identifier))))
+        (term
+          (function (identifier)))
+        (literal
+          (default_negation)
+          (atom (function (identifier))))
+        (term
+          (function (identifier)))
+        (literal
+          (default_negation)
+          (atom (function (identifier))))
+        (upper_guard
+          (comparison_predicate)
+          (term (number)))))))

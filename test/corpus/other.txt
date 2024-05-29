@@ -12,8 +12,9 @@ grid(1..S,Y) :- X = 1..S, Y = 1..S - 1, size(S).
       (literal
         (atom (function
                 (identifier)
-                (term (interval (term (number)) (term (variable))))
-                (term (variable))))))
+                (terms
+                  (interval (term (number)) (term (variable)))
+                  (variable))))))
     (body
       (literal
         (comparison
