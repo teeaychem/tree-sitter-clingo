@@ -37,7 +37,7 @@ Minimize
   (optimise_statement
     (optimise_weight
       (weight (term
-        (arithmetic_function
+        (divide
           (term (variable))
           (term (variable)))))
       (priority (term (number))))
@@ -96,7 +96,7 @@ Weak constraint 2
             (term (number))))))
     (optimise_weight
       (weight (term
-        (arithmetic_function
+        (minus
           (term (number)))))
       (priority (term (number))))
       (term (number))))

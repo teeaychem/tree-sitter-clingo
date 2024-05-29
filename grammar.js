@@ -23,7 +23,8 @@ module.exports = grammar({
       // skip constterm from yy which excludes variables and pools
       // api yy mix
       term: $ => choice($.interval,
-                        $.arithmetic_function,
+                        $._arithmetic_function,
+                        $._bitwise_function,
                         $.function,
                         $.external_function,
                         // symbols
@@ -93,19 +94,47 @@ module.exports = grammar({
       boolean: $ => choice('#true', '#false'),
 
       // yy, inlines unaryargvec for abs case
-      arithmetic_function: $ => choice($._unary_arithmetic_function,
-                                       $._binary_arithmetic_function),
+      _arithmetic_function: $ => choice($.plus,
+                                       $.minus,
+                                       $.times,
+                                       $.divide,
+                                       $.modulo,
+                                       $.power,
+                                       alias($.unary_minus, $.minus),
+                                       $.absolute),
 
-      _unary_arithmetic_function: $ => prec(1, choice(seq(choice('-', '~'), $.term),
-                                                     seq('|', seq(optional(repeat(seq($.term, ';'))), $.term), '|'))),
+      _bitwise_function: $ => choice($.bitor,
+                                $.bitxor,
+                                $.bitand,
+                                $.bitneg),
 
-      // yy
-      _binary_arithmetic_function: $ => choice(prec.left(2, seq($.term,
-                                                               choice('^', '?', '&', '+', '-', '*', '/', '\\'),
-                                                               $.term)),
-                                              prec.right(2, seq($.term,
-                                                                choice('**'),
-                                                                $.term))),
+      bitor: $ => prec.left(1, seq($.term, '?', $.term)),
+
+      bitxor: $ => prec.left(2, seq($.term, '^', $.term)),
+
+      bitand: $ => prec.left(3, seq($.term, '&', $.term)),
+
+      plus: $ => prec.left(3, seq($.term, '+', $.term)),      plus: $ => prec.left(3, seq($.term, '+', $.term)),
+
+      minus: $ => prec.left(3, seq($.term, '-', $.term)),
+
+      times: $ => prec.left(4, seq($.term, '*', $.term)),
+
+      divide: $ => prec.left(4, seq($.term, '/', $.term)),
+
+      modulo: $ => prec.left(4, seq($.term, '\\', $.term)),
+
+      power: $ => prec.right(5, seq($.term, choice('**'), $.term)),
+
+      unary_minus: $ => prec(6, seq('-', $.term)),
+
+      bitneg: $ => prec(6, seq('~', $.term)),
+
+      absolute: $ => prec(7, seq('|', seq(optional(repeat(seq($.term, ';'))), $.term), '|')),
+
+
+
+
 
       // yy
       comparison_predicate: $ => choice('=', '!=', '<', '<=', '>', '>='),
