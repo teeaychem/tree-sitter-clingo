@@ -82,8 +82,9 @@ geq(X,Y) :- X >= Y.
       (literal
         (atom (function
                 (identifier)
-                (term (variable))
-                (term (variable))))))
+                (terms
+                  (variable)
+                  (variable))))))
     (body
       (literal
         (comparison
@@ -108,8 +109,9 @@ squares(XX,YY) :- XX = X*X, Y*Y = YY, Y'-1 = Y, Y'*Y' = XX+YY, num(X), num(Y), X
         (atom
           (function
             (identifier)
-            (term (variable))
-            (term (variable))))))
+            (terms
+              (variable)
+              (variable))))))
     (body
       (literal
         (comparison

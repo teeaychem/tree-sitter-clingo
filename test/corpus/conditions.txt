@@ -100,6 +100,54 @@ a :- b : c; d; e : f, g; h : ; i.
             (literal (atom (function (identifier))))
             (literal (atom (function (identifier))))))
         (conditional_literal
-          (literal (atom (function (identifier))))
-          (condition))
-        (literal (atom (function (identifier)))))))
+            (literal (atom (function (identifier))))
+            (condition))
+          (literal (atom (function (identifier)))))))
+
+=======
+Cond.lp
+=======
+
+person(jane).  person(john).
+day(mon).  day(tue).  day(wed).  day(thu).  day(fri).
+available(jane) :- not on(fri).
+available(john) :- not on(mon), not on(wed).
+meet :- available(X) : person(X).
+on(X) : day(X) :- meet.
+
+---
+
+(source_file
+  (fact (literal (atom (function (identifier) (term (function (identifier)))))))
+  (fact (literal (atom (function (identifier) (term (function (identifier)))))))
+  (fact (literal (atom (function (identifier) (term (function (identifier)))))))
+  (fact (literal (atom (function (identifier) (term (function (identifier)))))))
+  (fact (literal (atom (function (identifier) (term (function (identifier)))))))
+  (fact (literal (atom (function (identifier) (term (function (identifier)))))))
+  (fact (literal (atom (function (identifier) (term (function (identifier)))))))
+  (rule
+    (head
+      (literal (atom (function (identifier) (term (function (identifier)))))))
+    (body
+      (literal (default_negation) (atom (function (identifier) (term (function (identifier))))))))
+  (rule
+    (head
+      (literal (atom (function (identifier) (term (function (identifier)))))))
+    (body
+      (literal (default_negation) (atom (function (identifier) (term (function (identifier))))))
+      (literal (default_negation) (atom (function (identifier) (term (function (identifier))))))))
+  (rule
+    (head
+      (literal (atom (function (identifier)))))
+    (body
+      (conditional_literal
+        (literal (atom (function (identifier) (term (variable)))))
+        (condition (literal (atom (function (identifier) (term (variable)))))))))
+  (rule
+    (head
+      (disjunction
+        (conditional_literal
+          (literal (atom (function (identifier) (term (variable)))))
+          (condition (literal (atom (function (identifier) (term (variable)))))))))
+    (body
+      (literal (atom (function (identifier)))))))
