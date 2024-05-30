@@ -71,11 +71,11 @@
         },
         {
           "type": "PATTERN",
-          "value": "#inf"
+          "value": "\"#inf(?:imum)?"
         },
         {
           "type": "PATTERN",
-          "value": "#sup"
+          "value": "#sup(?:remum)?"
         },
         {
           "type": "STRING",
@@ -2917,6 +2917,10 @@
         }
       ]
     },
+    "script_contents": {
+      "type": "PATTERN",
+      "value": "(?:(?:[^#])|(?:#[^e])|(?:#e[^n])|(?:#en[^d])|(?:#end[^\\.]))+"
+    },
     "python": {
       "type": "SEQ",
       "members": [
@@ -2929,8 +2933,8 @@
           "value": "(python)"
         },
         {
-          "type": "PATTERN",
-          "value": "(?:(?:[^#])|(?:#[^e])|(?:#e[^n])|(?:#en[^d])|(?:#end[^\\.]))+"
+          "type": "SYMBOL",
+          "name": "script_contents"
         },
         {
           "type": "STRING",
@@ -2950,14 +2954,378 @@
           "value": "(lua)"
         },
         {
-          "type": "PATTERN",
-          "value": "(?:(?:[^#])|(?:#[^e])|(?:#e[^n])|(?:#en[^d])|(?:#end[^\\.]))+"
+          "type": "SYMBOL",
+          "name": "script_contents"
         },
         {
           "type": "STRING",
           "value": "#end."
         }
       ]
+    },
+    "_basic_theory_op": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "!"
+        },
+        {
+          "type": "STRING",
+          "value": "<"
+        },
+        {
+          "type": "STRING",
+          "value": "="
+        },
+        {
+          "type": "STRING",
+          "value": ">"
+        },
+        {
+          "type": "STRING",
+          "value": "+"
+        },
+        {
+          "type": "STRING",
+          "value": "-"
+        },
+        {
+          "type": "STRING",
+          "value": "*"
+        },
+        {
+          "type": "STRING",
+          "value": "/"
+        },
+        {
+          "type": "STRING",
+          "value": "\\"
+        },
+        {
+          "type": "STRING",
+          "value": "?"
+        },
+        {
+          "type": "STRING",
+          "value": "&"
+        },
+        {
+          "type": "STRING",
+          "value": "|"
+        },
+        {
+          "type": "STRING",
+          "value": "~"
+        },
+        {
+          "type": "STRING",
+          "value": "^"
+        }
+      ]
+    },
+    "_combination_only_theory_op": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "."
+        },
+        {
+          "type": "STRING",
+          "value": ":"
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "theory_op": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "default_negation"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_basic_theory_op"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "_basic_theory_op"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_combination_only_theory_op"
+                }
+              ]
+            },
+            {
+              "type": "REPEAT1",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "_basic_theory_op"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "_combination_only_theory_op"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "theory_op_list": {
+      "type": "REPEAT1",
+      "content": {
+        "type": "SYMBOL",
+        "name": "theory_op"
+      }
+    },
+    "theory_term": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "{"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "theory_opterm_list"
+            },
+            {
+              "type": "STRING",
+              "value": "}"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "["
+            },
+            {
+              "type": "SYMBOL",
+              "name": "theory_opterm_list"
+            },
+            {
+              "type": "STRING",
+              "value": "]"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "("
+            },
+            {
+              "type": "STRING",
+              "value": ")"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "("
+            },
+            {
+              "type": "SYMBOL",
+              "name": "theory_opterm_list"
+            },
+            {
+              "type": "STRING",
+              "value": ")"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "("
+            },
+            {
+              "type": "SYMBOL",
+              "name": "theory_opterm_list"
+            },
+            {
+              "type": "STRING",
+              "value": ","
+            },
+            {
+              "type": "STRING",
+              "value": ")"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "("
+            },
+            {
+              "type": "SYMBOL",
+              "name": "theory_opterm_list"
+            },
+            {
+              "type": "STRING",
+              "value": ","
+            },
+            {
+              "type": "SYMBOL",
+              "name": "theory_opterm_nlist"
+            },
+            {
+              "type": "STRING",
+              "value": ")"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "identifier"
+            },
+            {
+              "type": "STRING",
+              "value": "("
+            },
+            {
+              "type": "SYMBOL",
+              "name": "theory_opterm_list"
+            },
+            {
+              "type": "STRING",
+              "value": ")"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "number"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "string"
+        },
+        {
+          "type": "PATTERN",
+          "value": "\"#inf(?:imum)?"
+        },
+        {
+          "type": "PATTERN",
+          "value": "#sup(?:remum)?"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "variable"
+        }
+      ]
+    },
+    "theory_opterm": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "theory_opterm"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "theory_opterm_list"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "theory_term"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "theory_op_list"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "theory_term"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "theory_term"
+        }
+      ]
+    },
+    "theory_opterm_nlist": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "theory_opterm_nlist"
+            },
+            {
+              "type": "STRING",
+              "value": ","
+            },
+            {
+              "type": "SYMBOL",
+              "name": "theory_opterm"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "theory_opterm"
+        }
+      ]
+    },
+    "theory_opterm_list": {
+      "type": "REPEAT1",
+      "content": {
+        "type": "SYMBOL",
+        "name": "theory_opterm_nlist"
+      }
     },
     "theoryatom": {
       "type": "SEQ",
