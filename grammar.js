@@ -31,8 +31,8 @@ module.exports = grammar({
                         // symbols
                         $.number,
                         $.string,
-                        /#inf/,
-                        /#sup/,
+                        /"#inf(?:imum)?/,
+                        /#sup(?:remum)?/,
                         '_',
                         // symbols done
                         $.variable,
@@ -346,15 +346,55 @@ module.exports = grammar({
           $.lua
       ),
 
-      python: $ => seq('#script', '(python)',
-          /(?:(?:[^#])|(?:#[^e])|(?:#e[^n])|(?:#en[^d])|(?:#end[^\.]))+/, '#end\.'),
+      script_contents: $ => /(?:(?:[^#])|(?:#[^e])|(?:#e[^n])|(?:#en[^d])|(?:#end[^\.]))+/,
 
-      lua: $ => seq('#script', '(lua)',
-          /(?:(?:[^#])|(?:#[^e])|(?:#e[^n])|(?:#en[^d])|(?:#end[^\.]))+/, '#end\.'),
+      python: $ => seq('#script', '(python)', $.script_contents, '#end\.'),
+
+      lua: $ => seq('#script', '(lua)', $.script_contents, '#end\.'),
 
       /* script stuff end */
 
       /* theories */
+      _basic_theory_op: $ => choice('!', '<', '=', '>', '+', '-', '*', '/', '\\', '?', '&', '|', '~', '^'),
+
+      _combination_only_theory_op: $ => choice('\.', ':', ';'),
+
+      theory_op: $ => choice($.default_negation,
+                            $._basic_theory_op,
+                            seq(choice($._basic_theory_op, $._combination_only_theory_op),
+                                repeat1(choice($._basic_theory_op, $._combination_only_theory_op)))),
+
+      theory_op_list: $ => repeat1($.theory_op),
+
+      theory_term: $ => choice(
+          seq('{', $.theory_opterm_list, '}'),
+          seq('[', $.theory_opterm_list, ']'),
+          seq('(', ')'),
+          seq('(', $.theory_opterm_list, ')'),
+          seq('(', $.theory_opterm_list, ',', ')'),
+          seq('(', $.theory_opterm_list, ',', $.theory_opterm_nlist, ')'),
+          seq($.identifier, '(', $.theory_opterm_list, ')'),
+          $.identifier,
+          $.number,
+          $.string,
+          /"#inf(?:imum)?/,
+          /#sup(?:remum)?/,
+          $.variable),
+
+      theory_opterm: $ => choice(
+          seq($.theory_opterm, $.theory_opterm_list, $.theory_term),
+          seq($.theory_op_list, $.theory_term),
+          $.theory_term),
+
+      theory_opterm_nlist: $ => choice(
+          seq($.theory_opterm_nlist, ',', $.theory_opterm),
+          $.theory_opterm),
+
+      // WARNING: yy allows empty
+      theory_opterm_list: $ => repeat1($.theory_opterm_nlist),
+
+
+
       theoryatom: $ => seq(),
 
       /* other */

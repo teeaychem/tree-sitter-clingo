@@ -569,7 +569,17 @@
   {
     "type": "lua",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "script_contents",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "minus",
@@ -750,7 +760,17 @@
   {
     "type": "python",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "script_contents",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "rule",
@@ -1053,6 +1073,132 @@
     }
   },
   {
+    "type": "theory_op",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "default_negation",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "theory_op_list",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "theory_op",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "theory_opterm",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "theory_op_list",
+          "named": true
+        },
+        {
+          "type": "theory_opterm",
+          "named": true
+        },
+        {
+          "type": "theory_opterm_list",
+          "named": true
+        },
+        {
+          "type": "theory_term",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "theory_opterm_list",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "theory_opterm_nlist",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "theory_opterm_nlist",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "theory_opterm",
+          "named": true
+        },
+        {
+          "type": "theory_opterm_nlist",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "theory_term",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "string",
+          "named": true
+        },
+        {
+          "type": "theory_opterm_list",
+          "named": true
+        },
+        {
+          "type": "theory_opterm_nlist",
+          "named": true
+        },
+        {
+          "type": "variable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "times",
     "named": true,
     "fields": {},
@@ -1150,6 +1296,10 @@
         }
       ]
     }
+  },
+  {
+    "type": "!",
+    "named": false
   },
   {
     "type": "!=",
@@ -1390,6 +1540,10 @@
   {
     "type": "override",
     "named": false
+  },
+  {
+    "type": "script_contents",
+    "named": true
   },
   {
     "type": "variable",
