@@ -1073,6 +1073,121 @@
     }
   },
   {
+    "type": "theory_atom_definition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "theory_atom_type",
+          "named": true
+        },
+        {
+          "type": "theory_definition_identifier",
+          "named": true
+        },
+        {
+          "type": "theory_operator_definition_nlist",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "theory_atom_element",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "literal",
+          "named": true
+        },
+        {
+          "type": "theory_opterm_nlist",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "theory_atom_element_nlist",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "theory_atom_element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "theory_atom_name",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "theory_atom_type",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "theory_definition_identifier",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "theory_definition_nlist",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "theory_atom_definition",
+          "named": true
+        },
+        {
+          "type": "theory_term_definition",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "theory_op",
     "named": true,
     "fields": {},
@@ -1097,6 +1212,40 @@
       "types": [
         {
           "type": "theory_op",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "theory_operator_definition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "theory_op",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "theory_operator_definition_nlist",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "theory_operator_definition",
           "named": true
         }
       ]
@@ -1193,6 +1342,25 @@
         },
         {
           "type": "variable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "theory_term_definition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "theory_definition_identifier",
+          "named": true
+        },
+        {
+          "type": "theory_operator_definition_nlist",
           "named": true
         }
       ]
@@ -1398,6 +1566,10 @@
     "named": false
   },
   {
+    "type": "#theory",
+    "named": false
+  },
+  {
     "type": "#true",
     "named": false
   },
@@ -1518,6 +1690,18 @@
     "named": false
   },
   {
+    "type": "any",
+    "named": false
+  },
+  {
+    "type": "binary",
+    "named": false
+  },
+  {
+    "type": "body",
+    "named": false
+  },
+  {
     "type": "classical_negation",
     "named": true
   },
@@ -1534,16 +1718,36 @@
     "named": true
   },
   {
+    "type": "directive",
+    "named": false
+  },
+  {
+    "type": "head",
+    "named": false
+  },
+  {
     "type": "identifier",
     "named": true
+  },
+  {
+    "type": "left",
+    "named": false
   },
   {
     "type": "override",
     "named": false
   },
   {
+    "type": "right",
+    "named": false
+  },
+  {
     "type": "script_contents",
     "named": true
+  },
+  {
+    "type": "unary",
+    "named": false
   },
   {
     "type": "variable",

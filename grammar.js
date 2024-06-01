@@ -92,7 +92,7 @@ module.exports = grammar({
                      $.atom,
                      $.comparison)),
 
-      // yy, use optional($.nlitvec) for litvec
+      // yy, use optional($._nlitvec) for litvec
       _nlitvec: $ => seq($.literal, repeat(seq(',', $.literal))),
 
       boolean: $ => choice('#true', '#false'),
@@ -393,9 +393,47 @@ module.exports = grammar({
       // WARNING: yy allows empty
       theory_opterm_list: $ => repeat1($.theory_opterm_nlist),
 
+      theory_atom_element: $ => choice(seq($.theory_opterm_nlist, ':', optional($._nlitvec)),
+                                       seq(':', optional($._nlitvec))),
 
+      theory_atom_element_nlist: $ => seq($.theory_atom_element, repeat(seq(';', $.theory_atom_element))),
 
-      theoryatom: $ => seq(),
+      theory_atom_name: $ => choice($.identifier,
+                                    seq('(', $.identifier, ')')),
+
+      theory_atom: $ => seq('&', $.theory_atom_name, optional(seq('{', optional($.theory_atom_element_nlist), '}', optional(seq($.theory_op, $.theory_opterm))))),
+
+      theory_operator_nlist: $ => seq($.theory_op, repeat(seq(',', $.theory_op))),
+
+      theory_operator_definition: $ => choice(seq($.theory_op, ':', $.number, ',', 'unary'),
+                                              seq($.theory_op, ':', $.number, ',', 'binary', ',', 'left'),
+                                              seq($.theory_op, ':', $.number, ',', 'binary', ',', 'right')),
+
+      theory_operator_definition_nlist: $ => seq($.theory_operator_definition, repeat(seq(';', $.theory_operator_definition))),
+
+      theory_definition_identifier: $ => choice(
+          $.identifier,
+          'left',
+          'right',
+          'unary',
+          'binary',
+          'head',
+          'body',
+          'any',
+          'directive'),
+
+      theory_term_definition: $ => seq($.theory_definition_identifier, '{', optional($.theory_operator_definition_nlist), '}'),
+
+      theory_atom_type: $ => choice('head', 'body', 'any', 'directive'),
+
+      theory_atom_definition: $ => choice(seq('&', $.theory_definition_identifier, '/', $.number, ':', $.theory_definition_identifier, ',', '{', optional($.theory_operator_definition_nlist), '}', ',', $.theory_definition_identifier, ',', $.theory_atom_type),
+                                          seq('&', $.theory_definition_identifier, '/', $.number, ':', $.theory_definition_identifier, ',', $.theory_atom_type)),
+
+      theory_definition_nlist: $ => seq(repeat(seq(choice($.theory_atom_definition,
+                                                          $.theory_term_definition), ';')), choice($.theory_atom_definition,
+                                                                                              $.theory_term_definition)),
+
+      statement: $ => seq('#theory', $.identifier, '{', optional($.theory_definition_nlist), '}', '.'),
 
       /* other */
   }
