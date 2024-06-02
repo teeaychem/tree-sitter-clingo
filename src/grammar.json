@@ -572,7 +572,7 @@
     },
     "bitor": {
       "type": "PREC_LEFT",
-      "value": 1,
+      "value": 0,
       "content": {
         "type": "SEQ",
         "members": [
@@ -593,7 +593,7 @@
     },
     "bitxor": {
       "type": "PREC_LEFT",
-      "value": 2,
+      "value": 0,
       "content": {
         "type": "SEQ",
         "members": [
@@ -614,7 +614,7 @@
     },
     "bitand": {
       "type": "PREC_LEFT",
-      "value": 3,
+      "value": 0,
       "content": {
         "type": "SEQ",
         "members": [
@@ -635,7 +635,7 @@
     },
     "plus": {
       "type": "PREC_LEFT",
-      "value": 3,
+      "value": 0,
       "content": {
         "type": "SEQ",
         "members": [
@@ -656,7 +656,7 @@
     },
     "minus": {
       "type": "PREC_LEFT",
-      "value": 3,
+      "value": 0,
       "content": {
         "type": "SEQ",
         "members": [
@@ -677,7 +677,7 @@
     },
     "times": {
       "type": "PREC_LEFT",
-      "value": 4,
+      "value": 0,
       "content": {
         "type": "SEQ",
         "members": [
@@ -698,7 +698,7 @@
     },
     "divide": {
       "type": "PREC_LEFT",
-      "value": 4,
+      "value": 0,
       "content": {
         "type": "SEQ",
         "members": [
@@ -719,7 +719,7 @@
     },
     "modulo": {
       "type": "PREC_LEFT",
-      "value": 4,
+      "value": 0,
       "content": {
         "type": "SEQ",
         "members": [
@@ -740,7 +740,7 @@
     },
     "power": {
       "type": "PREC_RIGHT",
-      "value": 5,
+      "value": 0,
       "content": {
         "type": "SEQ",
         "members": [
@@ -765,80 +765,68 @@
       }
     },
     "unary_minus": {
-      "type": "PREC",
-      "value": 6,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "STRING",
-            "value": "-"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "_single_term"
-          }
-        ]
-      }
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "-"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_single_term"
+        }
+      ]
     },
     "bitneg": {
-      "type": "PREC",
-      "value": 6,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "STRING",
-            "value": "~"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "_single_term"
-          }
-        ]
-      }
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "~"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_single_term"
+        }
+      ]
     },
     "absolute": {
-      "type": "PREC",
-      "value": 7,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "STRING",
-            "value": "|"
-          },
-          {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "REPEAT",
-                "content": {
-                  "type": "SEQ",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "_single_term"
-                    },
-                    {
-                      "type": "STRING",
-                      "value": ";"
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "SYMBOL",
-                "name": "_single_term"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "|"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "REPEAT",
+              "content": {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "_single_term"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": ";"
+                  }
+                ]
               }
-            ]
-          },
-          {
-            "type": "STRING",
-            "value": "|"
-          }
-        ]
-      }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_single_term"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "|"
+        }
+      ]
     },
     "comparison_predicate": {
       "type": "CHOICE",
@@ -3921,6 +3909,296 @@
     ]
   ],
   "precedences": [
+    [
+      {
+        "type": "SYMBOL",
+        "name": "unary_minus"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "interval"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "unary_minus"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "minus"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "unary_minus"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "bitor"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "unary_minus"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "bitxor"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "unary_minus"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "bitand"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "unary_minus"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "times"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "unary_minus"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "plus"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "unary_minus"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "divide"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "unary_minus"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "modulo"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "unary_minus"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "power"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "bitneg"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "interval"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "bitneg"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "minus"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "bitneg"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "bitor"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "bitneg"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "bitxor"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "bitneg"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "bitand"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "bitneg"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "times"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "bitneg"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "plus"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "bitneg"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "divide"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "bitneg"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "modulo"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "bitneg"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "power"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "minus"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "interval"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "bitor"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "interval"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "bitxor"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "interval"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "bitand"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "interval"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "times"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "interval"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "plus"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "interval"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "divide"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "interval"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "modulo"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "interval"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "power"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "interval"
+      }
+    ],
     [
       {
         "type": "SYMBOL",

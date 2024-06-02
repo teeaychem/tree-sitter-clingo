@@ -19,6 +19,39 @@ module.exports = grammar({
     ],
 
     precedences: $ => [
+        // unary minus over every other arithmetic or bitwise function but absolute value
+        [$.unary_minus, $.interval],
+        [$.unary_minus, $.minus],
+        [$.unary_minus, $.bitor],
+        [$.unary_minus, $.bitxor],
+        [$.unary_minus, $.bitand],
+        [$.unary_minus, $.times],
+        [$.unary_minus, $.plus],
+        [$.unary_minus, $.divide],
+        [$.unary_minus, $.modulo],
+        [$.unary_minus, $.power],
+        // unary minus over every other arithmetic or bitwise function but absolute value
+        [$.bitneg, $.interval],
+        [$.bitneg, $.minus],
+        [$.bitneg, $.bitor],
+        [$.bitneg, $.bitxor],
+        [$.bitneg, $.bitand],
+        [$.bitneg, $.times],
+        [$.bitneg, $.plus],
+        [$.bitneg, $.divide],
+        [$.bitneg, $.modulo],
+        [$.bitneg, $.power],
+        // every arithmetic or bitwise function over interval
+        [$.minus, $.interval],
+        [$.bitor, $.interval],
+        [$.bitxor, $.interval],
+        [$.bitand, $.interval],
+        [$.times, $.interval],
+        [$.plus, $.interval],
+        [$.divide, $.interval],
+        [$.modulo, $.interval],
+        [$.power, $.interval],
+        // conditions
         [$.condition, $._disjunctionsepelem],
         [$.condition, $.disjunction],
     ],
@@ -126,29 +159,29 @@ module.exports = grammar({
                                      $.bitand,
                                      $.bitneg),
 
-      bitor: $ => prec.left(1, seq($._single_term, '?', $._single_term)),
+      bitor: $ => prec.left(seq($._single_term, '?', $._single_term)),
 
-      bitxor: $ => prec.left(2, seq($._single_term, '^', $._single_term)),
+      bitxor: $ => prec.left(seq($._single_term, '^', $._single_term)),
 
-      bitand: $ => prec.left(3, seq($._single_term, '&', $._single_term)),
+      bitand: $ => prec.left(seq($._single_term, '&', $._single_term)),
 
-      plus: $ => prec.left(3, seq($._single_term, '+', $._single_term)),      plus: $ => prec.left(3, seq($._single_term, '+', $._single_term)),
+      plus: $ => prec.left(seq($._single_term, '+', $._single_term)),
 
-      minus: $ => prec.left(3, seq($._single_term, '-', $._single_term)),
+      minus: $ => prec.left(seq($._single_term, '-', $._single_term)),
 
-      times: $ => prec.left(4, seq($._single_term, '*', $._single_term)),
+      times: $ => prec.left(seq($._single_term, '*', $._single_term)),
 
-      divide: $ => prec.left(4, seq($._single_term, '/', $._single_term)),
+      divide: $ => prec.left(seq($._single_term, '/', $._single_term)),
 
-      modulo: $ => prec.left(4, seq($._single_term, '\\', $._single_term)),
+      modulo: $ => prec.left(seq($._single_term, '\\', $._single_term)),
 
-      power: $ => prec.right(5, seq($._single_term, choice('**'), $._single_term)),
+      power: $ => prec.right(seq($._single_term, choice('**'), $._single_term)),
 
-      unary_minus: $ => prec(6, seq('-', $._single_term)),
+      unary_minus: $ => seq('-', $._single_term),
 
-      bitneg: $ => prec(6, seq('~', $._single_term)),
+      bitneg: $ => seq('~', $._single_term),
 
-      absolute: $ => prec(7, seq('|', seq(repeat(seq($._single_term, ';')), $._single_term), '|')),
+      absolute: $ => seq('|', seq(repeat(seq($._single_term, ';')), $._single_term), '|'),
 
       // yy
       comparison_predicate: $ => choice('=', '!=', '<', '<=', '>', '>='),
