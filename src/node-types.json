@@ -281,6 +281,11 @@
     }
   },
   {
+    "type": "default_negation",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "disjunction",
     "named": true,
     "fields": {},
@@ -730,6 +735,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "precedence",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "priority",
@@ -1205,38 +1215,9 @@
     }
   },
   {
-    "type": "theory_definition_nlist",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "theory_atom_definition",
-          "named": true
-        },
-        {
-          "type": "theory_term_definition",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "theory_op",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "default_negation",
-          "named": true
-        }
-      ]
-    }
+    "fields": {}
   },
   {
     "type": "theory_operator_definition",
@@ -1247,26 +1228,19 @@
       "required": true,
       "types": [
         {
-          "type": "number",
+          "type": "arity",
+          "named": true
+        },
+        {
+          "type": "associativity",
+          "named": true
+        },
+        {
+          "type": "precedence",
           "named": true
         },
         {
           "type": "theory_op",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "theory_operator_definition_nlist",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "theory_operator_definition",
           "named": true
         }
       ]
@@ -1304,7 +1278,11 @@
           "named": true
         },
         {
-          "type": "theory_definition_nlist",
+          "type": "theory_atom_definition",
+          "named": true
+        },
+        {
+          "type": "theory_term_definition",
           "named": true
         }
       ]
@@ -1354,7 +1332,7 @@
           "named": true
         },
         {
-          "type": "theory_operator_definition_nlist",
+          "type": "theory_operator_definition",
           "named": true
         }
       ]
@@ -1458,10 +1436,6 @@
         }
       ]
     }
-  },
-  {
-    "type": "!",
-    "named": false
   },
   {
     "type": "!=",
@@ -1688,6 +1662,14 @@
     "named": false
   },
   {
+    "type": "arity",
+    "named": true
+  },
+  {
+    "type": "associativity",
+    "named": true
+  },
+  {
     "type": "binary",
     "named": false
   },
@@ -1708,10 +1690,6 @@
     "named": false
   },
   {
-    "type": "default_negation",
-    "named": true
-  },
-  {
     "type": "directive",
     "named": false
   },
@@ -1725,6 +1703,10 @@
   },
   {
     "type": "left",
+    "named": false
+  },
+  {
+    "type": "not",
     "named": false
   },
   {

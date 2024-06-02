@@ -2866,127 +2866,27 @@
       ]
     },
     "_basic_theory_op": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "!"
-        },
-        {
-          "type": "STRING",
-          "value": "<"
-        },
-        {
-          "type": "STRING",
-          "value": "="
-        },
-        {
-          "type": "STRING",
-          "value": ">"
-        },
-        {
-          "type": "STRING",
-          "value": "+"
-        },
-        {
-          "type": "STRING",
-          "value": "-"
-        },
-        {
-          "type": "STRING",
-          "value": "*"
-        },
-        {
-          "type": "STRING",
-          "value": "/"
-        },
-        {
-          "type": "STRING",
-          "value": "\\"
-        },
-        {
-          "type": "STRING",
-          "value": "?"
-        },
-        {
-          "type": "STRING",
-          "value": "&"
-        },
-        {
-          "type": "STRING",
-          "value": "|"
-        },
-        {
-          "type": "STRING",
-          "value": "~"
-        },
-        {
-          "type": "STRING",
-          "value": "^"
-        }
-      ]
+      "type": "PATTERN",
+      "value": "[\\/!<=>+\\-*\\\\?&@|~\\^]"
     },
     "_combination_only_theory_op": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "."
-        },
-        {
-          "type": "STRING",
-          "value": ":"
-        },
-        {
-          "type": "STRING",
-          "value": ";"
-        }
-      ]
+      "type": "PATTERN",
+      "value": "[\\/!<=>+\\-*\\\\?&@|~\\^:;\\.][\\/!<=>+\\-*\\\\?&@|~\\^:;\\.]+"
     },
     "theory_op": {
       "type": "CHOICE",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "default_negation"
+          "type": "STRING",
+          "value": "not"
         },
         {
           "type": "SYMBOL",
           "name": "_basic_theory_op"
         },
         {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "_basic_theory_op"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "_combination_only_theory_op"
-                }
-              ]
-            },
-            {
-              "type": "REPEAT1",
-              "content": {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "SYMBOL",
-                    "name": "_basic_theory_op"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "_combination_only_theory_op"
-                  }
-                ]
-              }
-            }
-          ]
+          "type": "SYMBOL",
+          "name": "_combination_only_theory_op"
         }
       ]
     },
@@ -3470,16 +3370,26 @@
               "value": ":"
             },
             {
-              "type": "SYMBOL",
-              "name": "number"
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "number"
+              },
+              "named": true,
+              "value": "precedence"
             },
             {
               "type": "STRING",
               "value": ","
             },
             {
-              "type": "STRING",
-              "value": "unary"
+              "type": "ALIAS",
+              "content": {
+                "type": "STRING",
+                "value": "unary"
+              },
+              "named": true,
+              "value": "arity"
             }
           ]
         },
@@ -3495,63 +3405,54 @@
               "value": ":"
             },
             {
-              "type": "SYMBOL",
-              "name": "number"
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "number"
+              },
+              "named": true,
+              "value": "precedence"
             },
             {
               "type": "STRING",
               "value": ","
             },
             {
-              "type": "STRING",
-              "value": "binary"
+              "type": "ALIAS",
+              "content": {
+                "type": "STRING",
+                "value": "binary"
+              },
+              "named": true,
+              "value": "arity"
             },
             {
               "type": "STRING",
               "value": ","
             },
             {
-              "type": "STRING",
-              "value": "left"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "theory_op"
-            },
-            {
-              "type": "STRING",
-              "value": ":"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "number"
-            },
-            {
-              "type": "STRING",
-              "value": ","
-            },
-            {
-              "type": "STRING",
-              "value": "binary"
-            },
-            {
-              "type": "STRING",
-              "value": ","
-            },
-            {
-              "type": "STRING",
-              "value": "right"
+              "type": "ALIAS",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": "left"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "right"
+                  }
+                ]
+              },
+              "named": true,
+              "value": "associativity"
             }
           ]
         }
       ]
     },
-    "theory_operator_definition_nlist": {
+    "_theory_operator_definition_nlist": {
       "type": "SEQ",
       "members": [
         {
@@ -3633,7 +3534,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "theory_operator_definition_nlist"
+              "name": "_theory_operator_definition_nlist"
             },
             {
               "type": "BLANK"
@@ -3799,7 +3700,7 @@
         }
       ]
     },
-    "theory_definition_nlist": {
+    "_theory_definition_nlist": {
       "type": "SEQ",
       "members": [
         {
@@ -3862,7 +3763,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "theory_definition_nlist"
+              "name": "_theory_definition_nlist"
             },
             {
               "type": "BLANK"
@@ -3888,24 +3789,8 @@
   ],
   "conflicts": [
     [
-      "_combination_only_theory_op",
-      "theory_atom_element"
-    ],
-    [
       "theory_term",
       "theory_term"
-    ],
-    [
-      "theory_atom",
-      "theory_atom"
-    ],
-    [
-      "theory_op",
-      "theory_op"
-    ],
-    [
-      "theory_opterm",
-      "theory_opterm"
     ]
   ],
   "precedences": [
