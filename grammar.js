@@ -139,7 +139,7 @@ module.exports = grammar({
 
       tuple: $ => seq($.terms, optional(',')),
 
-      pool: $ => seq('(', optional(seq($.tuple, repeat(seq(';', $.tuple)))), ')'),
+      pool: $ => seq('(', optional(seq(repeat(seq($.tuple, ';')), $.tuple)), ')'),
 
       string: $ => seq('"', repeat(choice(/[^\"\n]/, /\\[\"n]/)), '"'),
 
@@ -240,8 +240,7 @@ module.exports = grammar({
       seq(
           optional($.lower_guard),
           choice(seq('{',
-                     optional(seq(repeat(seq($._optional_conditional_literal, ';')),
-                                  $._optional_conditional_literal,)),
+                     optional(seq(repeat(seq($._optional_conditional_literal, ';')), $._optional_conditional_literal,)),
                      '}'),
                  seq($.aggregate_function,
                      '{',
@@ -252,7 +251,7 @@ module.exports = grammar({
 
       _head_aggregate_elements: $ => seq(optional($.terms), ':', $._optional_conditional_literal, repeat(seq(';', optional($.terms), ':', $._optional_conditional_literal))),
 
-      _althead_aggregate_elements: $ => seq($._optional_conditional_literal, repeat(seq(';', $._optional_conditional_literal))),
+      _althead_aggregate_elements: $ => seq(repeat(seq($._optional_conditional_literal, ';')), $._optional_conditional_literal),
 
       _head_aggregate: $ => seq(
           optional($.lower_guard),
@@ -289,7 +288,7 @@ module.exports = grammar({
           '{',
           optional(seq($.optimise_weight,
                        ',',
-                       $._optimise_list_elem, repeat(seq(';', $._optimise_list_elem)))),
+                       repeat(seq($._optimise_list_elem, ';')), $._optimise_list_elem)),
           '}', '.'),
 
       weak_constraint: $ => seq(':~', optional(alias($._body, $.body)), '.',
@@ -318,7 +317,7 @@ module.exports = grammar({
 
       edge_statement: $ => seq('#edge',
                                '(',
-                               seq($.term, ',', $.term, repeat(seq(';', $.term, ',', $.term))),
+                               seq(repeat(seq($.term, ',', $.term, ';')), $.term, ',', $.term),
                                ')',
                                optional(seq(':', optional(alias($._body, $.body)))),  '.'),
 
@@ -329,20 +328,17 @@ module.exports = grammar({
                                      choice(seq(optional($.classical_negation), $.identifier, '/', $.number, '.'),
                                             seq($.atom, optional(seq(':', optional(alias($._body, $.body)))),  '.'))),
 
-      const_statement: $ => seq('#const', $.identifier, '=', $.term, '.',
+      const_statement: $ => seq('#const',
+                                $.identifier, '=', $.term, '.',
                                 optional(seq('[', choice('default', 'override'), ']'))),
 
       include_statement: $ => seq('#include', choice($.string, seq('<', $.identifier, '>')), '.'),
 
       block_statement: $ => seq('#program',
-                                $.identifier,
-                                optional(seq('(',
-                                             optional(seq(repeat(seq($.identifier, ',')),
-                                                          $.identifier,
-                                                          )),
-                                             ')')),'.'),
+                                $.identifier, optional(seq('(', optional(seq(repeat(seq($.identifier, ',')), $.identifier)), ')')),'.'),
 
-      external_statement: $ => seq('#external', $.atom, optional(seq(':', optional(alias($._body, $.body)))), '.',
+      external_statement: $ => seq('#external',
+                                   $.atom, optional(seq(':', optional(alias($._body, $.body)))), '.',
                                    optional(seq('[', $.term, ']'))),
 
       /* script stuff */
@@ -388,7 +384,7 @@ module.exports = grammar({
       theory_atom_element: $ => choice(seq($.theory_terms, optional($.condition)),
                                        $.condition),
 
-      theory_atom_elements: $ => seq($.theory_atom_element, repeat(seq(';', $.theory_atom_element))),
+      theory_atom_elements: $ => seq(repeat(seq($.theory_atom_element, ';')), $.theory_atom_element),
 
       _theory_atom_name: $ => choice($.identifier,
                                      seq('(', $.identifier, ')')),
@@ -402,13 +398,13 @@ module.exports = grammar({
       theory_operator_definition: $ => choice(seq($.theory_operator, ':', alias($.number, $.precedence), ',', alias('unary', $.arity)),
                                               seq($.theory_operator, ':', alias($.number, $.precedence), ',', alias('binary', $.arity), ',', alias(choice('left', 'right'), $.associativity))),
 
-      theory_operator_definitions: $ => seq($.theory_operator_definition, repeat(seq(';', $.theory_operator_definition))),
+      theory_operator_definitions: $ => seq(repeat(seq($.theory_operator_definition, ';')), $.theory_operator_definition),
 
       theory_term_definition: $ => seq($.identifier, '{', optional($.theory_operator_definitions), '}'),
 
       theory_atom_type: $ => choice('head', 'body', 'any', 'directive'),
 
-      theory_term_operators: $ => seq($.theory_operator, repeat(seq(',', $.theory_operator))),
+      theory_term_operators: $ => seq(repeat(seq($.theory_operator, ',')), $.theory_operator),
 
       theory_atom_definition: $ => seq('&', $.identifier, '/', alias($.number, $.arity), ':', alias($.identifier, $.theory_term_identifier), ',',
                                        optional(seq('{', optional($.theory_term_operators), '}', ',', alias($.identifier, $.theory_term_identifier), ',')),
