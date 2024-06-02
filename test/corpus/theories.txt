@@ -1,0 +1,22 @@
+=================
+Basic theory atom
+=================
+
+&show { start/1; end/1 }.
+
+---
+
+(source_file
+  (fact
+(theory_atom
+  (theory_atom_name (identifier))
+  (theory_atom_element
+    (theory_opterm
+      (theory_term (identifier))
+      (theory_op)
+      (theory_term (number))))
+  (theory_atom_element
+    (theory_opterm
+      (theory_term (identifier))
+      (theory_op)
+      (theory_term (number)))))))

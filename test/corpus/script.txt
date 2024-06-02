@@ -26,7 +26,7 @@ python.
 
 (source_file
   (fact (literal (atom (function (identifier)))))
-  (python)
+  (python (script_contents))
   (fact (literal (atom (function (identifier))))))
 
 
@@ -60,5 +60,5 @@ lua.
 
 (source_file
   (fact (literal (atom (function (identifier)))))
-  (lua)
+  (lua (script_contents))
   (fact (literal (atom (function (identifier))))))
