@@ -43,42 +43,34 @@
       }
     },
     "fact": {
-      "type": "PREC",
-      "value": 2,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "_head"
-          },
-          {
-            "type": "STRING",
-            "value": "."
-          }
-        ]
-      }
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_head"
+        },
+        {
+          "type": "STRING",
+          "value": "."
+        }
+      ]
     },
     "integrity_constraint": {
-      "type": "PREC",
-      "value": 2,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "STRING",
-            "value": ":-"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "_body"
-          },
-          {
-            "type": "STRING",
-            "value": "."
-          }
-        ]
-      }
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": ":-"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_body"
+        },
+        {
+          "type": "STRING",
+          "value": "."
+        }
+      ]
     },
     "_head": {
       "type": "CHOICE",
@@ -105,10 +97,6 @@
           "name": "theory_atom"
         }
       ]
-    },
-    "head": {
-      "type": "SYMBOL",
-      "name": "_head"
     },
     "_body": {
       "type": "SEQ",
@@ -270,50 +258,52 @@
         }
       ]
     },
-    "body": {
-      "type": "SYMBOL",
-      "name": "_body"
-    },
     "rule": {
-      "type": "PREC",
-      "value": 1,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "CHOICE",
-            "members": [
-              {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "ALIAS",
+              "content": {
                 "type": "SYMBOL",
-                "name": "head"
+                "name": "_head"
               },
-              {
-                "type": "BLANK"
-              }
-            ]
-          },
-          {
-            "type": "STRING",
-            "value": ":-"
-          },
-          {
-            "type": "CHOICE",
-            "members": [
-              {
+              "named": true,
+              "value": "head"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": ":-"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "ALIAS",
+              "content": {
                 "type": "SYMBOL",
-                "name": "body"
+                "name": "_body"
               },
-              {
-                "type": "BLANK"
-              }
-            ]
-          },
-          {
-            "type": "STRING",
-            "value": "."
-          }
-        ]
-      }
+              "named": true,
+              "value": "body"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "."
+        }
+      ]
     },
     "term": {
       "type": "CHOICE",
@@ -1905,8 +1895,13 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "body"
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_body"
+              },
+              "named": true,
+              "value": "body"
             },
             {
               "type": "BLANK"
@@ -2065,8 +2060,13 @@
                                   "value": ":"
                                 },
                                 {
-                                  "type": "SYMBOL",
-                                  "name": "body"
+                                  "type": "ALIAS",
+                                  "content": {
+                                    "type": "SYMBOL",
+                                    "name": "_body"
+                                  },
+                                  "named": true,
+                                  "value": "body"
                                 }
                               ]
                             },
@@ -2236,8 +2236,13 @@
                   "type": "CHOICE",
                   "members": [
                     {
-                      "type": "SYMBOL",
-                      "name": "body"
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "_body"
+                      },
+                      "named": true,
+                      "value": "body"
                     },
                     {
                       "type": "BLANK"
@@ -2282,8 +2287,13 @@
                   "type": "CHOICE",
                   "members": [
                     {
-                      "type": "SYMBOL",
-                      "name": "body"
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "_body"
+                      },
+                      "named": true,
+                      "value": "body"
                     },
                     {
                       "type": "BLANK"
@@ -2408,8 +2418,13 @@
                           "type": "CHOICE",
                           "members": [
                             {
-                              "type": "SYMBOL",
-                              "name": "body"
+                              "type": "ALIAS",
+                              "content": {
+                                "type": "SYMBOL",
+                                "name": "_body"
+                              },
+                              "named": true,
+                              "value": "body"
                             },
                             {
                               "type": "BLANK"
@@ -2627,8 +2642,13 @@
                   "type": "CHOICE",
                   "members": [
                     {
-                      "type": "SYMBOL",
-                      "name": "body"
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "_body"
+                      },
+                      "named": true,
+                      "value": "body"
                     },
                     {
                       "type": "BLANK"
@@ -4004,6 +4024,16 @@
       {
         "type": "SYMBOL",
         "name": "upper_guard"
+      }
+    ],
+    [
+      {
+        "type": "SYMBOL",
+        "name": "integrity_constraint"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "rule"
       }
     ]
   ],
