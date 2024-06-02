@@ -12,18 +12,9 @@ Maximize
       (weight (term (variable)))
       (priority (term (number))))
     (terms (term (variable)))
-    (literal
-      (atom
-        (function
-          (identifier)
-          (terms (term (variable))))))
-    (literal
-      (atom
-        (function
-          (identifier)
-          (terms
-            (term (variable))
-            (term (variable))))))))
+    (condition
+      (literal (atom (function (identifier) (terms (term (variable))))))
+      (literal (atom (function (identifier) (terms (term (variable)) (term (variable)))))))))
 
 
 ========
@@ -43,25 +34,10 @@ Minimize
           (term (variable)))))
       (priority (term (number))))
     (terms (term (variable)))
-    (literal
-      (atom
-        (function
-          (identifier)
-          (terms (term (variable))))))
-    (literal
-      (atom
-        (function
-          (identifier)
-          (terms
-            (term (variable))
-            (term (variable))))))
-    (literal
-      (atom
-        (function
-          (identifier)
-          (terms
-            (term (variable))
-            (term (variable))))))))
+    (condition
+    (literal (atom (function (identifier) (terms (term (variable))))))
+    (literal (atom (function (identifier) (terms (term (variable)) (term (variable))))))
+    (literal (atom (function (identifier) (terms (term (variable)) (term (variable)))))))))
 
 
 =================
