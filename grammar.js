@@ -306,11 +306,14 @@ module.exports = grammar({
                              $._external_statement,
                              $._optimize_statement),
 
-      _show_statement: $ => seq(choice(seq('#show', optional(seq($.term, optional(seq(':', alias($._body, $.body)))))),
-                                      seq('#showsig', optional($.classical_negation), $.identifier, '/', $.number)),
+      _show_statement: $ => seq(choice(seq(alias('#show', $.directive),
+                                           optional(seq($.term, optional(seq(':', alias($._body, $.body)))))),
+                                       seq(alias('#showsig', $.directive),
+                                          optional($.classical_negation), $.identifier, '/', $.number)),
                                '.'),
 
-      _warning_statement: $ => seq('#defined', optional($.classical_negation), $.identifier, '/', $.number, '.'),
+      _warning_statement: $ => seq(alias('#defined', $.directive),
+                                   optional($.classical_negation), $.identifier, '/', $.number, '.'),
 
       _edge_statement: $ => seq(alias('#edge', $.directive),
                                '(',
@@ -348,9 +351,11 @@ module.exports = grammar({
 
       script_contents: $ => /(?:(?:[^#])|(?:#[^e])|(?:#e[^n])|(?:#en[^d])|(?:#end[^\.]))+/,
 
-      python: $ => seq('#script', '(python)', $.script_contents, '#end\.'),
+      python: $ => seq(alias('#script', $.directive),
+                       '(python)', $.script_contents, '#end\.'),
 
-      lua: $ => seq('#script', '(lua)', $.script_contents, '#end\.'),
+      lua: $ => seq(alias('#script', $.directive),
+                    '(lua)', $.script_contents, '#end\.'),
 
       /* script stuff end */
 
@@ -413,7 +418,8 @@ module.exports = grammar({
                                                           $.theory_term_definition), ';')), choice($.theory_atom_definition,
                                                                                                    $.theory_term_definition)),
 
-      theory_statement: $ => seq('#theory', $.identifier, '{', optional($.theory_definitions), '}', '.'),
+      theory_statement: $ => seq(alias('#theory', $.directive),
+                                 $.identifier, '{', optional($.theory_definitions), '}', '.'),
 
       /* other */
   }

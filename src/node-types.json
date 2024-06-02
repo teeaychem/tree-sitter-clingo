@@ -460,9 +460,13 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "directive",
+          "named": true
+        },
         {
           "type": "script_contents",
           "named": true
@@ -594,9 +598,13 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "directive",
+          "named": true
+        },
         {
           "type": "script_contents",
           "named": true
@@ -676,7 +684,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "atom",
@@ -1008,6 +1016,10 @@
       "required": true,
       "types": [
         {
+          "type": "directive",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -1199,10 +1211,6 @@
     "named": false
   },
   {
-    "type": "#defined",
-    "named": false
-  },
-  {
     "type": "#end.",
     "named": false
   },
@@ -1219,27 +1227,11 @@
     "named": false
   },
   {
-    "type": "#script",
-    "named": false
-  },
-  {
-    "type": "#show",
-    "named": false
-  },
-  {
-    "type": "#showsig",
-    "named": false
-  },
-  {
     "type": "#sum",
     "named": false
   },
   {
     "type": "#sum+",
-    "named": false
-  },
-  {
-    "type": "#theory",
     "named": false
   },
   {

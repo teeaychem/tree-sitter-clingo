@@ -1994,8 +1994,13 @@
               "type": "SEQ",
               "members": [
                 {
-                  "type": "STRING",
-                  "value": "#show"
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "STRING",
+                    "value": "#show"
+                  },
+                  "named": true,
+                  "value": "directive"
                 },
                 {
                   "type": "CHOICE",
@@ -2046,8 +2051,13 @@
               "type": "SEQ",
               "members": [
                 {
-                  "type": "STRING",
-                  "value": "#showsig"
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "STRING",
+                    "value": "#showsig"
+                  },
+                  "named": true,
+                  "value": "directive"
                 },
                 {
                   "type": "CHOICE",
@@ -2087,8 +2097,13 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "#defined"
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "#defined"
+          },
+          "named": true,
+          "value": "directive"
         },
         {
           "type": "CHOICE",
@@ -2703,8 +2718,13 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "#script"
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "#script"
+          },
+          "named": true,
+          "value": "directive"
         },
         {
           "type": "STRING",
@@ -2724,8 +2744,13 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "#script"
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "#script"
+          },
+          "named": true,
+          "value": "directive"
         },
         {
           "type": "STRING",
@@ -3498,8 +3523,13 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "#theory"
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "#theory"
+          },
+          "named": true,
+          "value": "directive"
         },
         {
           "type": "SYMBOL",
