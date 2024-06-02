@@ -23,7 +23,7 @@
       "required": false,
       "types": [
         {
-          "type": "aggregatefunction",
+          "type": "aggregate_function",
           "named": true
         },
         {
@@ -50,7 +50,7 @@
     }
   },
   {
-    "type": "aggregatefunction",
+    "type": "aggregate_function",
     "named": true,
     "fields": {}
   },
@@ -73,21 +73,6 @@
         },
         {
           "type": "function",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "binaryargvec",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "term",
           "named": true
         }
       ]
@@ -333,11 +318,11 @@
       "required": true,
       "types": [
         {
-          "type": "binaryargvec",
+          "type": "body",
           "named": true
         },
         {
-          "type": "body",
+          "type": "term",
           "named": true
         }
       ]
