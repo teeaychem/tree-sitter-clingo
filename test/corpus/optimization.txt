@@ -7,8 +7,9 @@ Maximize
 ---
 
 (source_file
-  (optimise_statement
-    (optimise_weight
+  (statement
+    (directive)
+    (optimize_weight
       (weight (term (variable)))
       (priority (term (number))))
     (terms (term (variable)))
@@ -26,8 +27,9 @@ Minimize
 ---
 
 (source_file
-  (optimise_statement
-    (optimise_weight
+  (statement
+    (directive)
+    (optimize_weight
       (weight (term
         (divide
           (term (variable))
@@ -52,7 +54,7 @@ Weak constraint 1
   (weak_constraint
     (body
       (literal (atom (function (identifier)))))
-        (optimise_weight
+        (optimize_weight
           (weight (term (number)))
           (priority (term (number))))))
 
@@ -73,7 +75,7 @@ Weak constraint 2
           (function
             (identifier)
             (terms (term (number)))))))
-    (optimise_weight
+    (optimize_weight
       (weight (term
         (minus
           (term (number)))))

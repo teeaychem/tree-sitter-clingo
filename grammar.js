@@ -75,8 +75,8 @@ module.exports = grammar({
                                       $.fact,
                                       $.integrity_constraint,
                                       $.comment,
-                                      $._optimisation,
-                                      $._statement,
+                                      $.weak_constraint,
+                                      $.statement,
                                       $._script,
                                       $.theory_statement)),
 
@@ -271,73 +271,72 @@ module.exports = grammar({
 
 
       /* optimisation */
-
-      _optimisation: $ => choice($.weak_constraint,
-                                 $.optimise_statement),
-
-      _optimise_list_elem: $ => seq($.terms, optional($.condition)),
+      _optimize_list_elem: $ => seq($.terms, optional($.condition)),
 
       priority: $ => seq('@', $.term),
 
       weight: $ => $.term,
 
-      optimise_weight: $ => seq($.weight, optional($.priority)),
+      optimize_weight: $ => seq($.weight, optional($.priority)),
 
-      optimise_statement: $ => seq(
-          choice('#maximize', '#minimize', '#maximise', '#minimise'),
+      _optimize_statement: $ => seq(
+          alias(choice('#maximize', '#minimize', '#maximise', '#minimise'), $.directive),
           '{',
-          optional(seq($.optimise_weight,
+          optional(seq($.optimize_weight,
                        ',',
-                       repeat(seq($._optimise_list_elem, ';')), $._optimise_list_elem)),
+                       repeat(seq($._optimize_list_elem, ';')), $._optimize_list_elem)),
           '}', '.'),
 
       weak_constraint: $ => seq(':~', optional(alias($._body, $.body)), '.',
-                                '[', $.optimise_weight, optional(seq(',', $.terms)), ']'),
+                                '[', $.optimize_weight, optional(seq(',', $.terms)), ']'),
 
       /* optimisation end */
 
       comment: $ => token(choice(seq('%', /[^\n]*/),
                                  seq('%*', /(?:(?:[^\*])|(?:\*[^%]))+/, '*%'))),
 
-      _statement: $ => choice($.show_statement,
-                              $.warning_statement,
-                              $.edge_statement,
-                              $.heuristic_statement,
-                              $.projection_statement,
-                              $.const_statement,
-                              $.include_statement,
-                              $.block_statement,
-                              $.external_statement),
+      statement: $ => choice($._show_statement,
+                             $._warning_statement,
+                             $._edge_statement,
+                             $._heuristic_statement,
+                             $._projection_statement,
+                             $._const_statement,
+                             $._include_statement,
+                             $._program_statement,
+                             $._external_statement,
+                             $._optimize_statement),
 
-      show_statement: $ => seq(choice(seq('#show', optional(seq($.term, optional(seq(':', alias($._body, $.body)))))),
+      _show_statement: $ => seq(choice(seq('#show', optional(seq($.term, optional(seq(':', alias($._body, $.body)))))),
                                       seq('#showsig', optional($.classical_negation), $.identifier, '/', $.number)),
                                '.'),
 
-      warning_statement: $ => seq('#defined', optional($.classical_negation), $.identifier, '/', $.number, '.'),
+      _warning_statement: $ => seq('#defined', optional($.classical_negation), $.identifier, '/', $.number, '.'),
 
-      edge_statement: $ => seq('#edge',
+      _edge_statement: $ => seq(alias('#edge', $.directive),
                                '(',
                                seq(repeat(seq($.term, ',', $.term, ';')), $.term, ',', $.term),
                                ')',
                                optional(seq(':', optional(alias($._body, $.body)))),  '.'),
 
-      heuristic_statement: $ => seq('#heuristic', $.atom, optional(seq(':', optional(alias($._body, $.body)))), '.',
+      _heuristic_statement: $ => seq(alias('#heuristic', $.directive),
+                                     $.atom, optional(seq(':', optional(alias($._body, $.body)))), '.',
                                     '[', $.term, optional(seq('@', $.term)), ',', $.term, ']'),
 
-      projection_statement: $ => seq('#project',
+      _projection_statement: $ => seq(alias('#project', $.directive),
                                      choice(seq(optional($.classical_negation), $.identifier, '/', $.number, '.'),
                                             seq($.atom, optional(seq(':', optional(alias($._body, $.body)))),  '.'))),
 
-      const_statement: $ => seq('#const',
+      _const_statement: $ => seq(alias('#const', $.directive),
                                 $.identifier, '=', $.term, '.',
                                 optional(seq('[', choice('default', 'override'), ']'))),
 
-      include_statement: $ => seq('#include', choice($.string, seq('<', $.identifier, '>')), '.'),
+      _include_statement: $ => seq(alias('#include', $.directive),
+                                  choice($.string, seq('<', $.identifier, '>')), '.'),
 
-      block_statement: $ => seq('#program',
+      _program_statement: $ => seq(alias('#program', $.directive),
                                 $.identifier, optional(seq('(', optional(seq(repeat(seq($.identifier, ',')), $.identifier)), ')')),'.'),
 
-      external_statement: $ => seq('#external',
+      _external_statement: $ => seq(alias('#external', $.directive),
                                    $.atom, optional(seq(':', optional(alias($._body, $.body)))), '.',
                                    optional(seq('[', $.term, ']'))),
 
