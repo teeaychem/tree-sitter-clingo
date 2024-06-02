@@ -2,7 +2,7 @@
 Body: Count, lower, upper
 =========================
 
-:- 2 < #count { 42 : a; t : not b } < 4.
+:- 2 <  #count { 42 : a; t : not b  } < 4.
 
 ---
 
@@ -12,16 +12,15 @@ Body: Count, lower, upper
       (lower_guard
         (term (number))
         (comparison_predicate))
-      (aggregatefunction)
+      (aggregate_function)
       (terms (term (number)))
-      (literal (atom (function (identifier))))
+      (condition (literal (atom (function (identifier)))))
       (terms (term (function (identifier))))
-      (literal (default_negation)
-        (atom (function (identifier))))
+      (condition (literal (default_negation)
+        (atom (function (identifier)))))
       (upper_guard
         (comparison_predicate)
         (term (number))))))
-
 
 ================
 Head: Sum, upper
@@ -34,7 +33,7 @@ Head: Sum, upper
 (source_file
   (fact
     (aggregate
-      (aggregatefunction)
+      (aggregate_function)
       (terms (term (number)))
       (literal (atom (function (identifier))))
       (terms (term (function (identifier))))
@@ -58,7 +57,7 @@ Complex
   (rule
    (head
       (aggregate
-        (aggregatefunction)
+        (aggregate_function)
         (terms
           (term (number))
           (term (number))
@@ -84,13 +83,13 @@ Complex
           (term (number)))))
     (body
       (aggregate
-        (aggregatefunction)
+        (aggregate_function)
         (terms (term (number)))
-        (literal (atom (function (identifier))))
+        (condition (literal (atom (function (identifier)))))
         (terms (term (function (identifier))))
-        (literal (default_negation) (atom (function (identifier))))
+        (condition (literal (default_negation) (atom (function (identifier)))))
         (terms (term (function (identifier))))
-        (literal (default_negation) (atom (function (identifier))))
+        (condition (literal (default_negation) (atom (function (identifier)))))
         (upper_guard
           (comparison_predicate)
           (term (number)))))))
@@ -122,7 +121,7 @@ Short shortcut long
 (source_file
   (fact
     (aggregate
-      (aggregatefunction)
+      (aggregate_function)
       (terms (term (number)) (term (function (identifier))))
       (literal (atom (function (identifier))))
       (terms (term (number)) (term (function (identifier))))
