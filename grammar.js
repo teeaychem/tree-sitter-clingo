@@ -65,6 +65,8 @@ module.exports = grammar({
         [$.divide, $.upper_guard],
         [$.modulo, $.upper_guard],
         [$.power, $.upper_guard],
+        //
+        [$.integrity_constraint, $.rule]
     ],
 
   rules: {
@@ -79,16 +81,14 @@ module.exports = grammar({
                                       $.theory_statement)),
 
             /* rules */
-      fact: $ => prec(2, seq($._head, '.')),
+      fact: $ => seq($._head, '.'),
 
-      integrity_constraint: $ => prec(2, seq(':-', $._body, '.')),
+      integrity_constraint: $ => seq(':-', $._body, '.'),
 
       _head: $ => choice($.literal,
                          alias($._head_aggregate, $.aggregate),
                          $.disjunction,
                          $.theory_atom),
-
-      head: $ => $._head,
 
       _body: $ => seq(repeat(choice(seq(choice($.literal,
                                                seq(optional($.default_negation),
@@ -105,9 +105,8 @@ module.exports = grammar({
                                        $.theory_atom)),
                              $.conditional_literal)),
 
-      body: $ => $._body,
 
-      rule: $ => prec(1, seq(optional($.head), ':-', optional($.body), '.')),
+      rule: $ => seq(optional(alias($._head, $.head)), ':-', optional(alias($._body, $.body)), '.'),
 
       /* rules end */
 
@@ -294,7 +293,7 @@ module.exports = grammar({
                        $._optimise_list_elem, repeat(seq(';', $._optimise_list_elem)))),
           '}', '.'),
 
-      weak_constraint: $ => seq(':~', optional($.body), '.',
+      weak_constraint: $ => seq(':~', optional(alias($._body, $.body)), '.',
                                 '[', $.optimise_weight, optional(seq(',', $.terms)), ']'),
 
       /* optimisation end */
@@ -313,7 +312,7 @@ module.exports = grammar({
                               $.external_statement),
 
 
-      show_statement: $ => seq(choice(seq('#show', optional(seq($.term, optional(seq(':', $.body))))),
+      show_statement: $ => seq(choice(seq('#show', optional(seq($.term, optional(seq(':', alias($._body, $.body)))))),
                                       seq('#showsig', optional($.classical_negation), $.identifier, '/', $.number)),
                                '.'),
 
@@ -321,14 +320,14 @@ module.exports = grammar({
 
       _binaryargvec: $ => seq($.term, ',', $.term, repeat(seq(';', $.term, ',', $.term))),
 
-      edge_statement: $ => seq('#edge', '(', $._binaryargvec, ')', optional(seq(':', optional($.body))),  '.'),
+      edge_statement: $ => seq('#edge', '(', $._binaryargvec, ')', optional(seq(':', optional(alias($._body, $.body)))),  '.'),
 
-      heuristic_statement: $ => seq('#heuristic', $.atom, optional(seq(':', optional($.body))), '.',
+      heuristic_statement: $ => seq('#heuristic', $.atom, optional(seq(':', optional(alias($._body, $.body)))), '.',
                                     '[', $.term, optional(seq('@', $.term)), ',', $.term, ']'),
 
       projection_statement: $ => seq('#project',
                                      choice(seq(optional($.classical_negation), $.identifier, '/', $.number, '.'),
-                                            seq($.atom, optional(seq(':', optional($.body))),  '.'))),
+                                            seq($.atom, optional(seq(':', optional(alias($._body, $.body)))),  '.'))),
 
       const_statement: $ => seq('#const', $.identifier, '=', $.term, '.',
                                 optional(seq('[', choice('default', 'override'), ']'))),
@@ -342,7 +341,7 @@ module.exports = grammar({
                                                           repeat(seq(',', $.identifier)))),
                                              ')')),'.'),
 
-      external_statement: $ => seq('#external', $.atom, optional(seq(':', optional($.body))), '.',
+      external_statement: $ => seq('#external', $.atom, optional(seq(':', optional(alias($._body, $.body)))), '.',
                                    optional(seq('[', $.term, ']'))),
 
       /* script stuff */
