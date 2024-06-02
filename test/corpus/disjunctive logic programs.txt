@@ -41,10 +41,10 @@ d(1); d(2); d(3); d(4) :- body.
   (rule
     (head
       (disjunction
-        (literal (atom (function (identifier) (term (number)))))
-        (literal (atom (function (identifier) (term (number)))))
-        (literal (atom (function (identifier) (term (number)))))
-        (literal (atom (function (identifier) (term (number)))))))
+        (literal (atom (function (identifier) (terms (term (number))))))
+        (literal (atom (function (identifier) (terms (term (number))))))
+        (literal (atom (function (identifier) (terms (term (number))))))
+        (literal (atom (function (identifier) (terms (term (number))))))))
     (body
       (literal (atom (function (identifier)))))))
 
@@ -61,10 +61,10 @@ d(1), d(2), d(3), d(4), d(5) :- body.
   (rule
     (head
       (disjunction
-        (literal (atom (function (identifier) (term (number)))))
-        (literal (atom (function (identifier) (term (number)))))
-        (literal (atom (function (identifier) (term (number)))))
-        (literal (atom (function (identifier) (term (number)))))
-        (literal (atom (function (identifier) (term (number)))))))
+        (literal (atom (function (identifier) (terms (term (number))))))
+        (literal (atom (function (identifier) (terms (term (number))))))
+        (literal (atom (function (identifier) (terms (term (number))))))
+        (literal (atom (function (identifier) (terms (term (number))))))
+        (literal (atom (function (identifier) (terms (term (number))))))))
     (body
       (literal (atom (function (identifier)))))))

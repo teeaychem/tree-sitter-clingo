@@ -13,9 +13,9 @@ Body: Count, lower, upper
         (term (number))
         (comparison_predicate))
       (aggregatefunction)
-      (term (number))
+      (terms (term (number)))
       (literal (atom (function (identifier))))
-      (term (function (identifier)))
+      (terms (term (function (identifier))))
       (literal (default_negation)
         (atom (function (identifier))))
       (upper_guard
@@ -35,9 +35,9 @@ Head: Sum, upper
   (fact
     (aggregate
       (aggregatefunction)
-      (term (number))
+      (terms (term (number)))
       (literal (atom (function (identifier))))
-      (term (function (identifier)))
+      (terms (term (function (identifier))))
       (literal (default_negation)
         (atom (function (identifier))))
       (upper_guard
@@ -60,46 +60,37 @@ Complex
       (aggregate
         (aggregatefunction)
         (terms
-          (number)
-          (number)
-          (number))
+          (term (number))
+          (term (number))
+          (term (number)))
         (literal
           (atom (function (identifier)
               (terms
-                (number)
-                (number)
-                (number)))))
+                (term (number))
+                (term (number))
+                (term (number))))))
         (terms
-          (number)
-          (number)
-          (number))
+          (term (number))
+          (term (number))
+          (term (number)))
         (literal
           (atom (function (identifier)
               (terms
-                (number)
-                (number)
-                (number)))))
+                (term (number))
+                (term (number))
+                (term (number))))))
         (upper_guard
           (comparison_predicate)
-          (term
-            (number)))))
+          (term (number)))))
     (body
       (aggregate
         (aggregatefunction)
-        (term
-          (number))
-        (literal
-          (atom (function (identifier))))
-        (term
-          (function (identifier)))
-        (literal
-          (default_negation)
-          (atom (function (identifier))))
-        (term
-          (function (identifier)))
-        (literal
-          (default_negation)
-          (atom (function (identifier))))
+        (terms (term (number)))
+        (literal (atom (function (identifier))))
+        (terms (term (function (identifier))))
+        (literal (default_negation) (atom (function (identifier))))
+        (terms (term (function (identifier))))
+        (literal (default_negation) (atom (function (identifier))))
         (upper_guard
           (comparison_predicate)
           (term (number)))))))
@@ -132,7 +123,7 @@ Short shortcut long
   (fact
     (aggregate
       (aggregatefunction)
-      (terms (number) (function (identifier)))
+      (terms (term (number)) (term (function (identifier))))
       (literal (atom (function (identifier))))
-      (terms (number) (function (identifier)))
+      (terms (term (number)) (term (function (identifier))))
       (literal (atom (function (identifier)))))))

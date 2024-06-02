@@ -11,19 +11,19 @@ Maximize
     (optimise_weight
       (weight (term (variable)))
       (priority (term (number))))
-    (term (variable))
+    (terms (term (variable)))
     (literal
       (atom
         (function
           (identifier)
-          (term (variable)))))
+          (terms (term (variable))))))
     (literal
       (atom
         (function
           (identifier)
           (terms
-            (variable)
-            (variable)))))))
+            (term (variable))
+            (term (variable))))))))
 
 
 ========
@@ -42,26 +42,26 @@ Minimize
           (term (variable))
           (term (variable)))))
       (priority (term (number))))
-    (term (variable))
+    (terms (term (variable)))
     (literal
       (atom
         (function
           (identifier)
-          (term (variable)))))
-    (literal
-      (atom
-        (function
-          (identifier)
-          (terms
-            (variable)
-            (variable)))))
+          (terms (term (variable))))))
     (literal
       (atom
         (function
           (identifier)
           (terms
-            (variable)
-            (variable)))))))
+            (term (variable))
+            (term (variable))))))
+    (literal
+      (atom
+        (function
+          (identifier)
+          (terms
+            (term (variable))
+            (term (variable))))))))
 
 
 =================
@@ -96,10 +96,10 @@ Weak constraint 2
         (atom
           (function
             (identifier)
-            (term (number))))))
+            (terms (term (number)))))))
     (optimise_weight
       (weight (term
         (minus
           (term (number)))))
       (priority (term (number))))
-      (term (number))))
+      (terms (term (number)))))
