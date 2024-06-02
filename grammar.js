@@ -11,11 +11,11 @@ module.exports = grammar({
                   ],
 
     conflicts: $ => [
-        [$._combination_only_theory_op, $.theory_atom_element],
+        // [$._combination_only_theory_op, $.theory_atom_element],
         [$.theory_term, $.theory_term],
-        [$.theory_atom, $.theory_atom],
-        [$.theory_op, $.theory_op],
-        [$.theory_opterm, $.theory_opterm]
+        // [$.theory_atom, $.theory_atom],
+        // [$.theory_op, $.theory_op],
+        // [$.theory_opterm, $.theory_opterm]
     ],
 
     precedences: $ => [
@@ -405,16 +405,15 @@ module.exports = grammar({
 
       /* theories */
 
-      _basic_theory_op: $ => choice('!', '<', '=', '>', '+', '-', '*', '/', '\\', '?', '\&', '|', '~', '^'),
 
-      _combination_only_theory_op: $ => choice('.',
-                                               ':',
-                                               ';'),
 
-      theory_op: $ => choice($.default_negation,
+      _basic_theory_op: $ => /[\/!<=>+\-*\\?&@|~\^]/,
+
+      _combination_only_theory_op: $ => /[\/!<=>+\-*\\?&@|~\^:;\.][\/!<=>+\-*\\?&@|~\^:;\.]+/,
+
+      theory_op: $ => choice('not',
                              $._basic_theory_op,
-                             seq(choice($._basic_theory_op, $._combination_only_theory_op),
-                                 repeat1(choice($._basic_theory_op, $._combination_only_theory_op)))),
+                             $._combination_only_theory_op),
 
       theory_term: $ =>
           choice(
@@ -446,11 +445,10 @@ module.exports = grammar({
           seq('\&', $.theory_atom_name, '{', optional($._theory_atom_element_nlist), '}', $.theory_op, $.theory_opterm)
       ),
 
-      theory_operator_definition: $ => choice(seq($.theory_op, ':', $.number, ',', 'unary'),
-                                              seq($.theory_op, ':', $.number, ',', 'binary', ',', 'left'),
-                                              seq($.theory_op, ':', $.number, ',', 'binary', ',', 'right')),
+      theory_operator_definition: $ => choice(seq($.theory_op, ':', alias($.number, $.precedence), ',', alias('unary', $.arity)),
+                                              seq($.theory_op, ':', alias($.number, $.precedence), ',', alias('binary', $.arity), ',', alias(choice('left', 'right'), $.associativity))),
 
-      theory_operator_definition_nlist: $ => seq($.theory_operator_definition, repeat(seq(';', $.theory_operator_definition))),
+      _theory_operator_definition_nlist: $ => seq($.theory_operator_definition, repeat(seq(';', $.theory_operator_definition))),
 
       theory_definition_identifier: $ => choice(
           $.identifier,
@@ -463,7 +461,7 @@ module.exports = grammar({
           'any',
           'directive'),
 
-      theory_term_definition: $ => seq($.theory_definition_identifier, '{', optional($.theory_operator_definition_nlist), '}'),
+      theory_term_definition: $ => seq($.theory_definition_identifier, '{', optional($._theory_operator_definition_nlist), '}'),
 
       theory_atom_type: $ => choice('head', 'body', 'any', 'directive'),
 
@@ -471,11 +469,11 @@ module.exports = grammar({
                                               '{', optional(seq($.theory_op, repeat(seq(',', $.theory_op)))), '}', ',', $.theory_definition_identifier, ',', $.theory_atom_type),
                                           seq('&', $.theory_definition_identifier, '/', $.number, ':', $.theory_definition_identifier, ',', $.theory_atom_type)),
 
-      theory_definition_nlist: $ => seq(repeat(seq(choice($.theory_atom_definition,
+      _theory_definition_nlist: $ => seq(repeat(seq(choice($.theory_atom_definition,
                                                           $.theory_term_definition), ';')), choice($.theory_atom_definition,
                                                                                               $.theory_term_definition)),
 
-      theory_statement: $ => seq('#theory', $.identifier, '{', optional($.theory_definition_nlist), '}', '.'),
+      theory_statement: $ => seq('#theory', $.identifier, '{', optional($._theory_definition_nlist), '}', '.'),
 
       /* other */
   }
