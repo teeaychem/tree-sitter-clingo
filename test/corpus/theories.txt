@@ -1,6 +1,227 @@
-=================
-Basic theory atom
-=================
+================================================
+Listing 1: The difference theory (lines 1 to 13)
+================================================
+
+#theory difference {
+  constant    {  - : 0, unary };
+  diff_term   {  - : 0, binary, left };
+  linear_term {  + : 2, unary;
+                 - : 2, unary;
+                 * : 1, binary, left;
+                 + : 0, binary, left;
+                 - : 0, binary, left };
+  domain_term { .. : 1, binary, left };
+  show_term   {  / : 1, binary, left };
+  &dom/0 :  domain_term, {=}, linear_term, any;
+  &sum/0 :  linear_term, {<=,=,>=,<,>,!=}, linear_term, any;
+  &diff/0 : diff_term,   {<=}, constant, any;
+  &show/0 : show_term, directive
+}.
+
+---
+
+(source_file
+  (theory_statement
+    (identifier)
+    (theory_definitions
+      (theory_term_definition
+        (identifier)
+        (theory_operator_definitions
+          (theory_operator_definition
+            (theory_operator)
+            (precedence)
+            (arity))))
+      (theory_term_definition
+        (identifier)
+        (theory_operator_definitions
+          (theory_operator_definition
+            (theory_operator)
+            (precedence)
+            (arity)
+            (associativity))))
+      (theory_term_definition
+        (identifier)
+        (theory_operator_definitions
+          (theory_operator_definition
+            (theory_operator)
+            (precedence)
+            (arity))
+          (theory_operator_definition
+            (theory_operator)
+            (precedence)
+            (arity))
+          (theory_operator_definition
+            (theory_operator)
+            (precedence)
+            (arity)
+            (associativity))
+          (theory_operator_definition
+            (theory_operator)
+            (precedence)
+            (arity)
+            (associativity))
+          (theory_operator_definition
+            (theory_operator)
+            (precedence)
+            (arity)
+            (associativity))))
+      (theory_term_definition
+        (identifier)
+        (theory_operator_definitions
+          (theory_operator_definition
+            (theory_operator)
+            (precedence)
+            (arity)
+            (associativity))))
+      (theory_term_definition
+        (identifier)
+        (theory_operator_definitions
+          (theory_operator_definition
+            (theory_operator)
+            (precedence)
+            (arity)
+            (associativity))))
+      (theory_atom_definition
+        (identifier)
+        (arity)
+        (theory_term_identifier)
+        (theory_term_operators
+          (theory_operator))
+        (theory_term_identifier)
+        (theory_atom_type))
+      (theory_atom_definition
+        (identifier)
+        (arity)
+        (theory_term_identifier)
+        (theory_term_operators
+          (theory_operator)
+          (theory_operator)
+          (theory_operator)
+          (theory_operator)
+          (theory_operator)
+          (theory_operator))
+        (theory_term_identifier)
+        (theory_atom_type))
+      (theory_atom_definition
+        (identifier)
+        (arity)
+        (theory_term_identifier)
+        (theory_term_operators
+          (theory_operator))
+        (theory_term_identifier)
+        (theory_atom_type))
+      (theory_atom_definition
+        (identifier)
+        (arity)
+        (theory_term_identifier)
+        (theory_atom_type)))))
+
+==================
+Listing 1: Line 17
+==================
+
+&dom { 1..m } = start(T) :- task(T).
+
+---
+
+
+(source_file
+  (rule
+    (head
+      (theory_atom
+        (identifier)
+        (theory_atom_elements
+          (theory_atom_element
+            (theory_terms
+              (theory_term
+                (theory_term (number))
+                (theory_operator)
+                (theory_term (identifier))))))
+        (theory_operator)
+        (theory_term
+          (identifier)
+          (theory_terms
+            (theory_term (variable))))))
+    (body
+      (literal
+        (atom
+          (function
+            (identifier)
+            (terms
+              (term (variable)))))))))
+
+==================
+Listing 1: Line 19
+==================
+
+&diff { end(T)-start(T)} <= D :- duration(T,D).
+
+---
+
+(source_file
+  (rule
+    (head
+      (theory_atom
+        (identifier)
+        (theory_atom_elements
+          (theory_atom_element
+            (theory_terms
+              (theory_term
+                (theory_term (identifier)
+                  (theory_terms
+                    (theory_term (variable))))
+                (theory_operator)
+                (theory_term
+                  (identifier)
+                  (theory_terms
+                    (theory_term
+                      (variable))))))))
+        (theory_operator)
+        (theory_term
+          (variable))))
+    (body
+      (literal
+        (atom
+          (function
+            (identifier)
+            (terms
+              (term (variable))
+              (term (variable)))))))))
+
+
+==================
+Listing 1: Line 20
+==================
+
+&sum { end(T) : task(T); -start(T) : task(T) } <= m.
+
+---
+
+(source_file
+  (fact
+    (theory_atom
+      (identifier)
+        (theory_atom_elements
+          (theory_atom_element
+            (theory_terms
+              (theory_term (identifier)
+                 (theory_terms
+                   (theory_term (variable)))))
+              (condition (literal (atom (function (identifier) (terms (term (variable))))))))
+          (theory_atom_element
+            (theory_terms
+              (theory_term (theory_operator)
+                (theory_term (identifier)
+                  (theory_terms
+                    (theory_term (variable))))))
+            (condition (literal (atom (function (identifier) (terms (term (variable)))))))))
+        (theory_operator)
+        (theory_term (identifier)))))
+
+
+==================
+Listing 1: Line 21
+==================
 
 &show { start/1; end/1 }.
 
@@ -8,15 +229,16 @@ Basic theory atom
 
 (source_file
   (fact
-(theory_atom
-  (theory_atom_name (identifier))
-  (theory_atom_element
-    (theory_opterm
-      (theory_term (identifier))
-      (theory_op)
-      (theory_term (number))))
-  (theory_atom_element
-    (theory_opterm
-      (theory_term (identifier))
-      (theory_op)
-      (theory_term (number)))))))
+    (theory_atom
+      (identifier)
+        (theory_atom_elements
+          (theory_atom_element
+            (theory_terms
+              (theory_term     (theory_term (identifier))
+                (theory_operator)
+                (theory_term (number)))))
+          (theory_atom_element
+            (theory_terms
+                (theory_term     (theory_term (identifier))
+                (theory_operator)
+                (theory_term (number)))))))))

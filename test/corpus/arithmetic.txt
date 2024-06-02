@@ -83,8 +83,8 @@ geq(X,Y) :- X >= Y.
         (atom (function
                 (identifier)
                 (terms
-                  (variable)
-                  (variable))))))
+                  (term (variable))
+                  (term (variable)))))))
     (body
       (literal
         (comparison
@@ -110,8 +110,8 @@ squares(XX,YY) :- XX = X*X, Y*Y = YY, Y'-1 = Y, Y'*Y' = XX+YY, num(X), num(Y), X
           (function
             (identifier)
             (terms
-              (variable)
-              (variable))))))
+              (term (variable))
+              (term (variable)))))))
     (body
       (literal
         (comparison
@@ -152,12 +152,12 @@ squares(XX,YY) :- XX = X*X, Y*Y = YY, Y'-1 = Y, Y'*Y' = XX+YY, num(X), num(Y), X
         (atom
           (function
             (identifier)
-            (term (variable)))))
+            (terms (term (variable))))))
       (literal
         (atom
           (function
             (identifier)
-            (term (variable)))))
+            (terms (term (variable))))))
       (literal
         (comparison
           (term (variable))
@@ -179,8 +179,9 @@ absolute(| 1; 2; 3 |).
       (atom
         (function
           (identifier)
-          (term
-            (absolute
-              (term (number))
-              (term (number))
-              (term (number)))))))))
+          (terms
+            (term
+              (absolute
+                (term (number))
+                (term (number))
+                (term (number))))))))))

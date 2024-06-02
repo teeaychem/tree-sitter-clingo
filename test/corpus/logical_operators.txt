@@ -36,10 +36,10 @@ Two kinds of negation
 (source_file
   (rule
     (head
-      (literal (atom (classical_negation) (function (identifier) (term (variable))))))
+      (literal (atom (classical_negation) (function (identifier) (terms (term (variable)))))))
     (body
-      (literal (atom (function (identifier) (term (variable)))))
-      (literal (default_negation) (atom (function (identifier) (term (variable))))))))
+      (literal (atom (function (identifier) (terms (term (variable))))))
+      (literal (default_negation) (atom (function (identifier) (terms (term (variable)))))))))
 
 
 ==========
@@ -53,10 +53,10 @@ fly(X) :- bird(X), not not fly(X).
 (source_file
   (rule
     (head
-      (literal (atom (function (identifier) (term (variable))))))
+      (literal (atom (function (identifier) (terms (term (variable)))))))
     (body
-      (literal (atom (function (identifier) (term (variable)))))
-      (literal (default_negation) (default_negation) (atom (function (identifier) (term (variable))))))))
+      (literal (atom (function (identifier) (terms (term (variable))))))
+      (literal (default_negation) (default_negation) (atom (function (identifier) (terms (term (variable)))))))))
 
 
 

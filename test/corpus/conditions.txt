@@ -118,36 +118,36 @@ on(X) : day(X) :- meet.
 ---
 
 (source_file
-  (fact (literal (atom (function (identifier) (term (function (identifier)))))))
-  (fact (literal (atom (function (identifier) (term (function (identifier)))))))
-  (fact (literal (atom (function (identifier) (term (function (identifier)))))))
-  (fact (literal (atom (function (identifier) (term (function (identifier)))))))
-  (fact (literal (atom (function (identifier) (term (function (identifier)))))))
-  (fact (literal (atom (function (identifier) (term (function (identifier)))))))
-  (fact (literal (atom (function (identifier) (term (function (identifier)))))))
+  (fact (literal (atom (function (identifier) (terms (term (function (identifier))))))))
+  (fact (literal (atom (function (identifier) (terms (term (function (identifier))))))))
+  (fact (literal (atom (function (identifier) (terms (term (function (identifier))))))))
+  (fact (literal (atom (function (identifier) (terms (term (function (identifier))))))))
+  (fact (literal (atom (function (identifier) (terms (term (function (identifier))))))))
+  (fact (literal (atom (function (identifier) (terms (term (function (identifier))))))))
+  (fact (literal (atom (function (identifier) (terms (term (function (identifier))))))))
   (rule
     (head
-      (literal (atom (function (identifier) (term (function (identifier)))))))
+      (literal (atom (function (identifier) (terms (term (function (identifier))))))))
     (body
-      (literal (default_negation) (atom (function (identifier) (term (function (identifier))))))))
+      (literal (default_negation) (atom (function (identifier) (terms (term (function (identifier)))))))))
   (rule
     (head
-      (literal (atom (function (identifier) (term (function (identifier)))))))
+      (literal (atom (function (identifier) (terms (term (function (identifier))))))))
     (body
-      (literal (default_negation) (atom (function (identifier) (term (function (identifier))))))
-      (literal (default_negation) (atom (function (identifier) (term (function (identifier))))))))
+      (literal (default_negation) (atom (function (identifier) (terms (term (function (identifier)))))))
+      (literal (default_negation) (atom (function (identifier) (terms (term (function (identifier)))))))))
   (rule
     (head
       (literal (atom (function (identifier)))))
     (body
       (conditional_literal
-        (literal (atom (function (identifier) (term (variable)))))
-        (condition (literal (atom (function (identifier) (term (variable)))))))))
+        (literal (atom (function (identifier) (terms (term (variable))))))
+        (condition (literal (atom (function (identifier) (terms (term (variable))))))))))
   (rule
     (head
       (disjunction
         (conditional_literal
-          (literal (atom (function (identifier) (term (variable)))))
-          (condition (literal (atom (function (identifier) (term (variable)))))))))
+          (literal (atom (function (identifier) (terms (term (variable))))))
+          (condition (literal (atom (function (identifier) (terms (term (variable))))))))))
     (body
       (literal (atom (function (identifier)))))))
