@@ -632,7 +632,7 @@
       "required": false,
       "types": [
         {
-          "type": "literal",
+          "type": "condition",
           "named": true
         },
         {
