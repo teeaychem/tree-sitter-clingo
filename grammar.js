@@ -10,6 +10,19 @@ module.exports = grammar({
                   $.classical_negation,
                   ],
 
+    conflicts: $ => [
+        [$._combination_only_theory_op, $.theory_atom_element],
+        [$.theory_term, $.theory_term],
+        [$.theory_atom, $.theory_atom],
+        [$.theory_op, $.theory_op],
+        [$.theory_opterm, $.theory_opterm]
+    ],
+
+    precedences: $ => [
+        [$.condition, $._disjunctionsepelem],
+        [$.condition, $.disjunction],
+    ],
+
   rules: {
 
       source_file: $ => repeat(choice($.rule,
@@ -18,7 +31,8 @@ module.exports = grammar({
                                       $.comment,
                                       $._optimisation,
                                       $._statement,
-                                      $._script)),
+                                      $._script,
+                                      $.theory_statement)),
 
 
       // skip constterm from yy which excludes variables and pools
@@ -93,7 +107,7 @@ module.exports = grammar({
                      $.comparison)),
 
       // yy, use optional($._nlitvec) for litvec
-      _nlitvec: $ => seq($.literal, repeat(seq(',', $.literal))),
+      _nlitvec: $ => seq(repeat(seq($.literal, ',')), $.literal),
 
       boolean: $ => choice('#true', '#false'),
 
@@ -144,10 +158,11 @@ module.exports = grammar({
                                    repeat(seq($.comparison_predicate, $._single_term)),
                                    seq($.comparison_predicate, $._single_term))),
 
-      condition: $ => prec(1, seq(':', optional(seq($.literal, repeat(seq(',', $.literal)))))),
+      condition: $ => seq(':', optional($._nlitvec)),
 
-      optional_conditional_literal: $ => choice($.literal, $.conditional_literal),
+      optional_conditional_literal: $ => seq($.literal, optional($.condition)),
 
+      // AKA a 'conjunction' in nongroundgrammar.yy
       conditional_literal: $ => seq($.literal, $.condition),
 
       /* aggregates start */
@@ -167,9 +182,9 @@ module.exports = grammar({
 
       // yy but MISSING theory_atom
       _lubodyaggregate: $ => alias(choice($._guarded__bodyaggregate_full,
-                                         $._guarded__bodyaggregate_partial,
-                                         $._bodyaggregate),
-                                  $.aggregate),
+                                          $._guarded__bodyaggregate_partial,
+                                          $._bodyaggregate),
+                                   $.aggregate),
 
       _guarded__bodyaggregate_full: $ => prec(2, seq($.lower_guard, $._bodyaggregate, $.upper_guard)),
 
@@ -195,9 +210,9 @@ module.exports = grammar({
 
       // yy, MISSING theory_atom
       _luheadaggregate: $ => alias(choice($._guarded_headaggregate_full,
-                                         $._guarded_headaggregate_partial,
-                                         $._headaggregate,),
-                                  $.aggregate),
+                                          $._guarded_headaggregate_partial,
+                                          $._headaggregate),
+                                   $.aggregate),
 
       _guarded_headaggregate_full: $ => prec(2, seq($.lower_guard, $._headaggregate, $.upper_guard)),
 
@@ -211,22 +226,15 @@ module.exports = grammar({
 
       /* aggregates end */
 
-      // yy
-      _conjunction: $ => choice($.conditional_literal,
-                               seq($.literal, ':', optional($._nlitvec))),
-
-      _disjunctionsepelem: $ => choice(seq($.literal, ','),
-                                       seq($.literal, choice(';', '|')),
-                                       seq(choice($.conditional_literal,
-                                                  seq($.literal, ':', $._nlitvec)), choice(';', '|')),
-                                       seq($.literal, ':', ';')),
+      _disjunctionsepelem: $ => repeat1(choice(
+          seq($.literal, choice(',', ';', '|')),
+          seq($.literal, ':', ';'),
+          seq($.literal, ':', $._nlitvec, choice(';', '|'))
+      )),
 
       // yy
-      disjunction: $ => choice(seq($._disjunctionsepelem,
-                                   repeat($._disjunctionsepelem),
-                                   $.optional_conditional_literal),
-                               $.conditional_literal,
-                               seq($.literal, ':', optional($._nlitvec))),
+      disjunction: $ => choice(seq($._disjunctionsepelem, $.optional_conditional_literal),
+                               $.conditional_literal),
 
       /* rules */
 
@@ -237,19 +245,27 @@ module.exports = grammar({
 
 
       _head: $ => choice($.literal,
-                        $._luheadaggregate,
-                        $.disjunction),
+                         $._luheadaggregate,
+                         $.disjunction,
+                         $.theory_atom
+                        ),
 
       head: $ => $._head,
 
       // inlined
       _body_agg: $ => seq(optional($.default_negation),
                           optional($.default_negation),
-                          $._lubodyaggregate),
+                          choice($._lubodyaggregate,
+                                 $.theory_atom)),
 
-      _body: $ => seq(repeat(choice(seq(choice($.literal, $._body_agg), choice(',', ';')),
-                                    seq($._conjunction, ';'))),
-                      choice($.literal, $._body_agg, $._conjunction)),
+      _body: $ => seq(repeat(choice(seq(choice($.literal,
+                                               $._body_agg),
+                                        choice(',',
+                                               ';')),
+                                    seq($.conditional_literal, ';'))),
+                      choice($.literal,
+                             $._body_agg,
+                             $.conditional_literal)),
 
       body: $ => $._body,
 
@@ -355,55 +371,47 @@ module.exports = grammar({
       /* script stuff end */
 
       /* theories */
-      _basic_theory_op: $ => choice('!', '<', '=', '>', '+', '-', '*', '/', '\\', '?', '&', '|', '~', '^'),
 
-      _combination_only_theory_op: $ => choice('\.', ':', ';'),
+      _basic_theory_op: $ => choice('!', '<', '=', '>', '+', '-', '*', '/', '\\', '?', '\&', '|', '~', '^'),
+
+      _combination_only_theory_op: $ => choice('.',
+                                               ':',
+                                               ';'),
 
       theory_op: $ => choice($.default_negation,
-                            $._basic_theory_op,
-                            seq(choice($._basic_theory_op, $._combination_only_theory_op),
-                                repeat1(choice($._basic_theory_op, $._combination_only_theory_op)))),
+                             $._basic_theory_op,
+                             seq(choice($._basic_theory_op, $._combination_only_theory_op),
+                                 repeat1(choice($._basic_theory_op, $._combination_only_theory_op)))),
 
-      theory_op_list: $ => repeat1($.theory_op),
+      theory_term: $ =>
+          choice(
+              seq('{', optional(seq(repeat(seq($.theory_opterm, ',')), $.theory_opterm)), '}'),
+              seq('[', optional(seq(repeat(seq($.theory_opterm, ',')), $.theory_opterm)), ']'),
+              seq('(', optional(seq($.theory_opterm, optional(seq(',', optional($.theory_opterm))))), ')'),
+              seq($.identifier, '(', optional(seq(repeat(seq($.theory_opterm, ',')), $.theory_opterm)), ')'),
+              $.identifier,
+              $.number,
+              $.string,
+              /"#inf(?:imum)?/,
+              /#sup(?:remum)?/,
+              $.variable),
 
-      theory_term: $ => choice(
-          seq('{', $.theory_opterm_list, '}'),
-          seq('[', $.theory_opterm_list, ']'),
-          seq('(', ')'),
-          seq('(', $.theory_opterm_list, ')'),
-          seq('(', $.theory_opterm_list, ',', ')'),
-          seq('(', $.theory_opterm_list, ',', $.theory_opterm_nlist, ')'),
-          seq($.identifier, '(', $.theory_opterm_list, ')'),
-          $.identifier,
-          $.number,
-          $.string,
-          /"#inf(?:imum)?/,
-          /#sup(?:remum)?/,
-          $.variable),
+      theory_opterm: $ => repeat1(seq(optional($.theory_op), $.theory_term)),
 
-      theory_opterm: $ => choice(
-          seq($.theory_opterm, $.theory_opterm_list, $.theory_term),
-          seq($.theory_op_list, $.theory_term),
-          $.theory_term),
+      theory_atom_element: $ => choice(seq(repeat(seq($.theory_opterm, ',')), $.theory_opterm, optional(seq(':', $._nlitvec))),
+                                       ':',
+                                       seq(':', $._nlitvec)),
 
-      theory_opterm_nlist: $ => choice(
-          seq($.theory_opterm_nlist, ',', $.theory_opterm),
-          $.theory_opterm),
-
-      // WARNING: yy allows empty
-      theory_opterm_list: $ => repeat1($.theory_opterm_nlist),
-
-      theory_atom_element: $ => choice(seq($.theory_opterm_nlist, ':', optional($._nlitvec)),
-                                       seq(':', optional($._nlitvec))),
-
-      theory_atom_element_nlist: $ => seq($.theory_atom_element, repeat(seq(';', $.theory_atom_element))),
+      _theory_atom_element_nlist: $ => seq($.theory_atom_element, repeat(seq(';', $.theory_atom_element))),
 
       theory_atom_name: $ => choice($.identifier,
                                     seq('(', $.identifier, ')')),
 
-      theory_atom: $ => seq('&', $.theory_atom_name, optional(seq('{', optional($.theory_atom_element_nlist), '}', optional(seq($.theory_op, $.theory_opterm))))),
-
-      theory_operator_nlist: $ => seq($.theory_op, repeat(seq(',', $.theory_op))),
+      theory_atom: $ => choice(
+          seq('\&', $.theory_atom_name),
+          seq('\&', $.theory_atom_name, '{', optional($._theory_atom_element_nlist), '}'),
+          seq('\&', $.theory_atom_name, '{', optional($._theory_atom_element_nlist), '}', $.theory_op, $.theory_opterm)
+      ),
 
       theory_operator_definition: $ => choice(seq($.theory_op, ':', $.number, ',', 'unary'),
                                               seq($.theory_op, ':', $.number, ',', 'binary', ',', 'left'),
@@ -426,14 +434,15 @@ module.exports = grammar({
 
       theory_atom_type: $ => choice('head', 'body', 'any', 'directive'),
 
-      theory_atom_definition: $ => choice(seq('&', $.theory_definition_identifier, '/', $.number, ':', $.theory_definition_identifier, ',', '{', optional($.theory_operator_definition_nlist), '}', ',', $.theory_definition_identifier, ',', $.theory_atom_type),
+      theory_atom_definition: $ => choice(seq('&', $.theory_definition_identifier, '/', $.number, ':', $.theory_definition_identifier, ',',
+                                              '{', optional(seq($.theory_op, repeat(seq(',', $.theory_op)))), '}', ',', $.theory_definition_identifier, ',', $.theory_atom_type),
                                           seq('&', $.theory_definition_identifier, '/', $.number, ':', $.theory_definition_identifier, ',', $.theory_atom_type)),
 
       theory_definition_nlist: $ => seq(repeat(seq(choice($.theory_atom_definition,
                                                           $.theory_term_definition), ';')), choice($.theory_atom_definition,
                                                                                               $.theory_term_definition)),
 
-      statement: $ => seq('#theory', $.identifier, '{', optional($.theory_definition_nlist), '}', '.'),
+      theory_statement: $ => seq('#theory', $.identifier, '{', optional($.theory_definition_nlist), '}', '.'),
 
       /* other */
   }

@@ -27,7 +27,7 @@
           "named": true
         },
         {
-          "type": "conditional_literal",
+          "type": "condition",
           "named": true
         },
         {
@@ -190,6 +190,10 @@
         {
           "type": "literal",
           "named": true
+        },
+        {
+          "type": "theory_atom",
+          "named": true
         }
       ]
     }
@@ -284,6 +288,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "condition",
+          "named": true
+        },
         {
           "type": "conditional_literal",
           "named": true
@@ -386,6 +394,10 @@
         {
           "type": "literal",
           "named": true
+        },
+        {
+          "type": "theory_atom",
+          "named": true
         }
       ]
     }
@@ -431,6 +443,10 @@
         },
         {
           "type": "literal",
+          "named": true
+        },
+        {
+          "type": "theory_atom",
           "named": true
         }
       ]
@@ -500,6 +516,10 @@
         },
         {
           "type": "literal",
+          "named": true
+        },
+        {
+          "type": "theory_atom",
           "named": true
         }
       ]
@@ -891,6 +911,10 @@
           "named": true
         },
         {
+          "type": "theory_statement",
+          "named": true
+        },
+        {
           "type": "warning_statement",
           "named": true
         },
@@ -1073,6 +1097,33 @@
     }
   },
   {
+    "type": "theory_atom",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "theory_atom_element",
+          "named": true
+        },
+        {
+          "type": "theory_atom_name",
+          "named": true
+        },
+        {
+          "type": "theory_op",
+          "named": true
+        },
+        {
+          "type": "theory_opterm",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "theory_atom_definition",
     "named": true,
     "fields": {},
@@ -1093,7 +1144,7 @@
           "named": true
         },
         {
-          "type": "theory_operator_definition_nlist",
+          "type": "theory_op",
           "named": true
         }
       ]
@@ -1112,22 +1163,7 @@
           "named": true
         },
         {
-          "type": "theory_opterm_nlist",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "theory_atom_element_nlist",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "theory_atom_element",
+          "type": "theory_opterm",
           "named": true
         }
       ]
@@ -1203,21 +1239,6 @@
     }
   },
   {
-    "type": "theory_op_list",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "theory_op",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "theory_operator_definition",
     "named": true,
     "fields": {},
@@ -1260,15 +1281,7 @@
       "required": true,
       "types": [
         {
-          "type": "theory_op_list",
-          "named": true
-        },
-        {
-          "type": "theory_opterm",
-          "named": true
-        },
-        {
-          "type": "theory_opterm_list",
+          "type": "theory_op",
           "named": true
         },
         {
@@ -1279,7 +1292,7 @@
     }
   },
   {
-    "type": "theory_opterm_list",
+    "type": "theory_statement",
     "named": true,
     "fields": {},
     "children": {
@@ -1287,26 +1300,11 @@
       "required": true,
       "types": [
         {
-          "type": "theory_opterm_nlist",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "theory_opterm_nlist",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "theory_opterm",
+          "type": "identifier",
           "named": true
         },
         {
-          "type": "theory_opterm_nlist",
+          "type": "theory_definition_nlist",
           "named": true
         }
       ]
@@ -1333,11 +1331,7 @@
           "named": true
         },
         {
-          "type": "theory_opterm_list",
-          "named": true
-        },
-        {
-          "type": "theory_opterm_nlist",
+          "type": "theory_opterm",
           "named": true
         },
         {
