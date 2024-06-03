@@ -12,7 +12,7 @@ Body: Count, lower, upper
       (lower_guard
         (term (number))
         (comparison_predicate))
-      (aggregate_function)
+      (directive (aggregate_function))
       (terms (term (number)))
       (condition (literal (atom (function (identifier)))))
       (terms (term (function (identifier))))
@@ -33,7 +33,7 @@ Head: Sum, upper
 (source_file
   (fact
     (aggregate
-      (aggregate_function)
+      (directive (aggregate_function))
       (terms (term (number)))
       (literal (atom (function (identifier))))
       (terms (term (function (identifier))))
@@ -57,7 +57,7 @@ Complex
   (rule
    (head
       (aggregate
-        (aggregate_function)
+        (directive (aggregate_function))
         (terms
           (term (number))
           (term (number))
@@ -83,7 +83,7 @@ Complex
           (term (number)))))
     (body
       (aggregate
-        (aggregate_function)
+        (directive (aggregate_function))
         (terms (term (number)))
         (condition (literal (atom (function (identifier)))))
         (terms (term (function (identifier))))
@@ -121,7 +121,7 @@ Short shortcut long
 (source_file
   (fact
     (aggregate
-      (aggregate_function)
+      (directive (aggregate_function))
       (terms (term (number)) (term (function (identifier))))
       (literal (atom (function (identifier))))
       (terms (term (number)) (term (function (identifier))))

@@ -22,7 +22,7 @@ Listing 1: The difference theory (lines 1 to 13)
 
 (source_file
   (theory_statement
-    (directive)
+    (directive (theory))
     (identifier)
     (theory_definitions
       (theory_term_definition
