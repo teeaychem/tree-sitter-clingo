@@ -230,8 +230,9 @@ module.exports = grammar({
       conditional_literal: $ => seq($.literal, $.condition),
 
       /* aggregates start */
+      _aggregate_function_directive: $ => seq('#', $.aggregate_function),
 
-      aggregate_function: $ => seq('#', choice('sum', 'sum+', 'min', 'max', 'count')),
+      aggregate_function: $ => choice('sum', 'sum+', 'min', 'max', 'count'),
 
       _body_aggregate_element: $ => choice($.condition,
                                            seq($.terms, optional($.condition))),
@@ -242,7 +243,7 @@ module.exports = grammar({
           choice(seq('{',
                      optional(seq(repeat(seq($._optional_conditional_literal, ';')), $._optional_conditional_literal,)),
                      '}'),
-                 seq($.aggregate_function,
+                 seq(alias($._aggregate_function_directive, $.directive),
                      '{',
                      optional(seq(repeat(seq($._body_aggregate_element, ';')), $._body_aggregate_element)),
                      '}')),
@@ -256,7 +257,8 @@ module.exports = grammar({
       _head_aggregate: $ => seq(
           optional($.lower_guard),
           choice(seq('{', '}'),
-                 seq($.aggregate_function, '{', optional($._head_aggregate_elements), '}'),
+                 seq(alias($._aggregate_function_directive, $.directive),
+                     '{', optional($._head_aggregate_elements), '}'),
                  seq('{', $._althead_aggregate_elements, '}')),
           optional($.upper_guard)),
 
@@ -472,7 +474,11 @@ module.exports = grammar({
                                                           $.theory_term_definition), ';')), choice($.theory_atom_definition,
                                                                                                    $.theory_term_definition)),
 
-      theory_statement: $ => seq(alias('#theory', $.directive),
+      _theory_directive: $ => seq('#', $.theory),
+
+      theory: $ => 'theory',
+
+      theory_statement: $ => seq(alias($._theory_directive, $.directive),
                                  $.identifier, '{', optional($.theory_definitions), '}', '.'),
 
       /* other */
