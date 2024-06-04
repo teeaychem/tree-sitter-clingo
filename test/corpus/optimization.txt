@@ -8,7 +8,7 @@ Maximize
 
 (source_file
   (statement
-    (directive (optimization))
+    (optimization (maximize))
     (optimize_weight
       (weight (term (variable)))
       (priority (term (number))))
@@ -28,7 +28,7 @@ Minimize
 
 (source_file
   (statement
-    (directive (optimization))
+    (optimization (minimize))
     (optimize_weight
       (weight (term
         (divide

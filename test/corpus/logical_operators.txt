@@ -8,8 +8,8 @@ Boolean constants.
 ---
 
 (source_file
-  (fact (literal (boolean)))
-  (fact (literal (boolean))))
+  (fact (literal (true)))
+  (fact (literal (false))))
 
 
 ===
@@ -21,8 +21,8 @@ NAF
 ---
 
 (source_file
-  (rule (head (literal (boolean)))
-        (body (literal (default_negation) (boolean)))))
+  (rule (head (literal (true)))
+        (body (literal (default_negation) (false)))))
 
 
 =====================

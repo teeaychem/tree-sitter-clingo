@@ -14,12 +14,12 @@ Heuristic (priority.lp)
 
 (source_file
   (statement
-    (directive (heuristic))
+    (heuristic)
     (atom (function (identifier)))
     (bias (term (number)))
     (modifier (term (function (identifier)))))
   (statement
-    (directive (heuristic))
+    (heuristic)
     (atom (function (identifier)))
     (bias (term (number)))
     (modifier (term (function (identifier)))))
@@ -32,13 +32,13 @@ Heuristic (priority.lp)
     (literal (atom (function (identifier)))))
   (fact (aggregate (literal (atom (function (identifier))))))
   (statement
-    (directive (heuristic))
+    (heuristic)
     (atom (function (identifier)))
     (bias (term (number)))
     (priority (term (number)))
     (modifier (term (function (identifier)))))
   (statement
-    (directive (heuristic))
+    (heuristic)
     (atom (function (identifier)))
     (body (literal (default_negation) (atom (function (identifier)))))
     (bias (term (minus (term (number)))))
@@ -56,7 +56,7 @@ Program (basic.lp)
 ---
 
 (source_file
-  (statement (directive (program)) (identifier))
+  (statement (program) (identifier))
   (integrity_constraint
     (literal (default_negation) (atom (function (identifier) (terms (term (variable))))))
     (literal (atom (function (identifier) (terms (term (variable))))))))
@@ -73,10 +73,12 @@ p(x,y).
 ---
 
 (source_file
-  (statement (directive (const))
+  (statement
+    (const)
     (identifier)
     (term (number)))
-  (statement (directive (const))
+  (statement
+    (const)
     (identifier)
     (term (function (identifier) (terms (term (function (identifier))) (term (function (identifier)))))))
   (fact (literal (atom (function (identifier) (terms (term (function (identifier))) (term (function (identifier)))))))))
@@ -97,7 +99,8 @@ r(X) :- q(X).
   (fact (literal (atom (function (identifier) (terms (term (number)))))))
   (fact (literal (atom (function (identifier) (terms (term (number)))))))
   (fact (literal (atom (function (identifier) (terms (term (number)))))))
-  (statement (directive (external))
+  (statement
+    (external)
     (atom (function (identifier) (terms (term (variable)))))
     (body (literal (atom (function (identifier) (terms (term (variable))))))))
   (fact (literal (atom (function (identifier) (terms (term (number)))))))
@@ -114,7 +117,7 @@ Include (include.lp)
 
 ---
 
-(source_file (statement (directive (include)) (string)))
+(source_file (statement (include) (string)))
 
 
 ===============
@@ -142,8 +145,8 @@ a :- q(1).
       (literal (atom (function (identifier)))))
     (body
       (literal (atom (function (identifier) (terms (term (number))))))))
-  (statement (directive (show)) (identifier) (arity (number)))
-  (statement (directive (show)) (identifier) (arity (number))))
+  (statement (show) (identifier) (arity (number)))
+  (statement (show) (identifier) (arity (number))))
 
 
 ==========
@@ -154,8 +157,7 @@ Show empty
 
 ---
 
-(source_file
-  (statement (directive (show))))
+(source_file (statement (show)))
 
 
 =========
@@ -167,7 +169,8 @@ Show term
 ---
 
 (source_file
-  (statement (directive (show))
+  (statement
+    (show)
     (term (function (identifier)))
     (body (literal (atom (function (identifier)))) (literal (atom (function (identifier)))))))
 
@@ -200,7 +203,7 @@ python.
 
 (source_file
   (fact (literal (atom (function (identifier)))))
-  (python (directive (script)) (script_contents))
+  (python (script) (script_contents))
   (fact (literal (atom (function (identifier))))))
 
 
@@ -234,5 +237,5 @@ lua.
 
 (source_file
   (fact (literal (atom (function (identifier)))))
-  (lua (directive (script)) (script_contents))
+  (lua (script) (script_contents))
   (fact (literal (atom (function (identifier))))))
