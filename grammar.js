@@ -9,7 +9,8 @@ module.exports = grammar({
                   ],
 
     conflicts: $ => [
-        [$.theory_term, $.theory_term],
+        [$._unary_theory_term, $._binary_theory_term],
+        [$._binary_theory_term, $._binary_theory_term],
     ],
 
     precedences: $ => [
@@ -211,7 +212,7 @@ module.exports = grammar({
 
       absolute: $ => seq('|', seq(repeat(seq($.term, ';')), $.term), '|'),
 
-      comparison_predicate: $ => choice('=', '!=', '<', '<=', '>', '>='),
+      comparison_predicate: $ => choice('=', '!=', '<', '<=', '>', '>=', '=='),
 
       lower_guard: $ => seq($.term, optional($.comparison_predicate)),
 
@@ -302,7 +303,7 @@ module.exports = grammar({
                                  seq('%*', /(?:(?:[^\*])|(?:\*[^%]))+/, '*%'))),
 
       statement: $ => choice($._show_statement,
-                             $._warning_statement,
+                             $._defined_statement,
                              $._edge_statement,
                              $._heuristic_statement,
                              $._projection_statement,
@@ -331,9 +332,8 @@ module.exports = grammar({
 
       defined: $ => 'defined',
 
-
-      _warning_statement: $ => seq(alias($._defined_directive, $.directive),
-                                   optional($.classical_negation), $.identifier, '/', $.number, '.'),
+      _defined_statement: $ => seq(alias($._defined_directive, $.directive),
+                                   optional($.classical_negation), $.identifier, '/', $.arity, '.'),
 
       _edge_directive: $ => seq('#', $.edge),
 
@@ -345,6 +345,8 @@ module.exports = grammar({
 
       weight: $ => $.term,
 
+      bias: $ => $.term,
+
       priority: $ => seq('@', $.term),
 
       modifier: $ => $.term,
@@ -355,14 +357,14 @@ module.exports = grammar({
 
       _heuristic_statement: $ => seq(alias($._heuristic_directive, $.directive),
                                      $.atom, optional(seq(':', optional(alias($._body, $.body)))), '.',
-                                    '[', $.weight, optional($.priority), ',', $.modifier, ']'),
+                                    '[', $.bias, optional($.priority), ',', $.modifier, ']'),
 
       _project_directive: $ => seq('#', $.project),
 
       project: $ => 'project',
 
       _projection_statement: $ => seq(alias($._project_directive, $.directive),
-                                      choice(seq(optional($.classical_negation), $.identifier, '/', $.number, '.'),
+                                      choice(seq(optional($.classical_negation), $.identifier, '/', $.arity, '.'),
                                              seq($.atom, optional(seq(':', optional(alias($._body, $.body)))),  '.'))),
 
       _const_directive: $ => seq('#', $.const),
@@ -431,14 +433,20 @@ module.exports = grammar({
                                       $.supremum,
                                       $.variable),
 
-      theory_terms: $ => prec.right(seq(repeat(seq($.theory_term, ',')), $.theory_term)),
+      _unary_theory_term: $ => seq($.theory_operator, $.theory_term),
+
+      _binary_theory_term: $ => seq($.theory_term, $.theory_operator, $.theory_term),
+
+      theory_terms: $ => seq(repeat(seq($.theory_term, ',')), $.theory_term),
+
+      _theory_term_tuple: $ => seq('(', optional(seq(alias(seq(repeat(seq($.theory_term, ',')), $.theory_term), $.theory_terms), optional(','))), ')'),
 
       theory_term: $ => choice($._basic_theory_term,
-                               seq($.theory_operator, $.theory_term),
-                               seq($.theory_term, $.theory_operator, $.theory_term),
+                               $._unary_theory_term,
+                               $._binary_theory_term,
                                seq('{', optional($.theory_terms), '}'),
                                seq('[', optional($.theory_terms), ']'),
-                               seq('(', optional(seq($.theory_terms, optional(','))), ')'),
+                               $._theory_term_tuple,
                                seq($.identifier, '(', optional($.theory_terms), ')')),
 
       theory_atom_element: $ => choice(seq($.theory_terms, optional($.condition)),
@@ -450,13 +458,17 @@ module.exports = grammar({
                                      seq('(', $.identifier, ')')),
 
       theory_atom: $ => choice(
-          seq('&', $._theory_atom_name),
-          seq('&', $._theory_atom_name, '{', optional($.theory_atom_elements), '}'),
-          seq('&', $._theory_atom_name, '{', optional($.theory_atom_elements), '}', $.theory_operator, $.theory_term)
+          seq('&', $._theory_atom_name, optional(seq('{', optional($.theory_atom_elements), '}', optional(seq($.theory_operator, $.theory_term))))),
       ),
 
-      theory_operator_definition: $ => choice(seq($.theory_operator, ':', alias($.number, $.precedence), ',', alias('unary', $.arity)),
-                                              seq($.theory_operator, ':', alias($.number, $.precedence), ',', alias('binary', $.arity), ',', alias(choice('left', 'right'), $.associativity))),
+
+      _unary_arity: $ => alias('unary', $.string),
+
+      _binary_arity: $ => alias('binary', $.string),
+
+
+      theory_operator_definition: $ => choice(seq($.theory_operator, ':', alias($.number, $.precedence), ',', alias($._unary_arity, $.arity)),
+                                              seq($.theory_operator, ':', alias($.number, $.precedence), ',', alias($._binary_arity, $.arity), ',', alias(choice('left', 'right'), $.associativity))),
 
       theory_operator_definitions: $ => seq(repeat(seq($.theory_operator_definition, ';')), $.theory_operator_definition),
 
@@ -466,7 +478,7 @@ module.exports = grammar({
 
       theory_term_operators: $ => seq(repeat(seq($.theory_operator, ',')), $.theory_operator),
 
-      theory_atom_definition: $ => seq('&', $.identifier, '/', alias($.number, $.arity), ':', alias($.identifier, $.theory_term_identifier), ',',
+      theory_atom_definition: $ => seq('&', $.identifier, '/', $.arity, ':', alias($.identifier, $.theory_term_identifier), ',',
                                        optional(seq('{', optional($.theory_term_operators), '}', ',', alias($.identifier, $.theory_term_identifier), ',')),
                                        $.theory_atom_type),
 

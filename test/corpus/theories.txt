@@ -31,14 +31,14 @@ Listing 1: The difference theory (lines 1 to 13)
           (theory_operator_definition
             (theory_operator)
             (precedence)
-            (arity))))
+            (arity (string)))))
       (theory_term_definition
         (identifier)
         (theory_operator_definitions
           (theory_operator_definition
             (theory_operator)
             (precedence)
-            (arity)
+            (arity (string))
             (associativity))))
       (theory_term_definition
         (identifier)
@@ -46,25 +46,25 @@ Listing 1: The difference theory (lines 1 to 13)
           (theory_operator_definition
             (theory_operator)
             (precedence)
-            (arity))
+            (arity (string)))
           (theory_operator_definition
             (theory_operator)
             (precedence)
-            (arity))
+            (arity (string)))
           (theory_operator_definition
             (theory_operator)
             (precedence)
-            (arity)
+            (arity (string))
             (associativity))
           (theory_operator_definition
             (theory_operator)
             (precedence)
-            (arity)
+            (arity (string))
             (associativity))
           (theory_operator_definition
             (theory_operator)
             (precedence)
-            (arity)
+            (arity (string))
             (associativity))))
       (theory_term_definition
         (identifier)
@@ -72,7 +72,7 @@ Listing 1: The difference theory (lines 1 to 13)
           (theory_operator_definition
             (theory_operator)
             (precedence)
-            (arity)
+            (arity (string))
             (associativity))))
       (theory_term_definition
         (identifier)
@@ -80,11 +80,11 @@ Listing 1: The difference theory (lines 1 to 13)
           (theory_operator_definition
             (theory_operator)
             (precedence)
-            (arity)
+            (arity (string))
             (associativity))))
       (theory_atom_definition
         (identifier)
-        (arity)
+        (arity (number))
         (theory_term_identifier)
         (theory_term_operators
           (theory_operator))
@@ -92,7 +92,7 @@ Listing 1: The difference theory (lines 1 to 13)
         (theory_atom_type))
       (theory_atom_definition
         (identifier)
-        (arity)
+        (arity (number))
         (theory_term_identifier)
         (theory_term_operators
           (theory_operator)
@@ -105,7 +105,7 @@ Listing 1: The difference theory (lines 1 to 13)
         (theory_atom_type))
       (theory_atom_definition
         (identifier)
-        (arity)
+        (arity (number))
         (theory_term_identifier)
         (theory_term_operators
           (theory_operator))
@@ -113,7 +113,7 @@ Listing 1: The difference theory (lines 1 to 13)
         (theory_atom_type))
       (theory_atom_definition
         (identifier)
-        (arity)
+        (arity (number))
         (theory_term_identifier)
         (theory_atom_type)))))
 
