@@ -23,11 +23,11 @@
       "required": false,
       "types": [
         {
-          "type": "condition",
+          "type": "aggregate_function",
           "named": true
         },
         {
-          "type": "directive",
+          "type": "condition",
           "named": true
         },
         {
@@ -52,7 +52,33 @@
   {
     "type": "aggregate_function",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "count",
+          "named": true
+        },
+        {
+          "type": "max",
+          "named": true
+        },
+        {
+          "type": "min",
+          "named": true
+        },
+        {
+          "type": "sum",
+          "named": true
+        },
+        {
+          "type": "sum_plus",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "arity",
@@ -199,11 +225,6 @@
     }
   },
   {
-    "type": "boolean",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "comparison",
     "named": true,
     "fields": {},
@@ -265,69 +286,6 @@
     "type": "default_negation",
     "named": true,
     "fields": {}
-  },
-  {
-    "type": "directive",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "aggregate_function",
-          "named": true
-        },
-        {
-          "type": "const",
-          "named": true
-        },
-        {
-          "type": "defined",
-          "named": true
-        },
-        {
-          "type": "edge",
-          "named": true
-        },
-        {
-          "type": "external",
-          "named": true
-        },
-        {
-          "type": "heuristic",
-          "named": true
-        },
-        {
-          "type": "include",
-          "named": true
-        },
-        {
-          "type": "optimization",
-          "named": true
-        },
-        {
-          "type": "program",
-          "named": true
-        },
-        {
-          "type": "project",
-          "named": true
-        },
-        {
-          "type": "script",
-          "named": true
-        },
-        {
-          "type": "show",
-          "named": true
-        },
-        {
-          "type": "theory",
-          "named": true
-        }
-      ]
-    }
   },
   {
     "type": "disjunction",
@@ -514,15 +472,19 @@
           "named": true
         },
         {
-          "type": "boolean",
-          "named": true
-        },
-        {
           "type": "comparison",
           "named": true
         },
         {
           "type": "default_negation",
+          "named": true
+        },
+        {
+          "type": "false",
+          "named": true
+        },
+        {
+          "type": "true",
           "named": true
         }
       ]
@@ -556,7 +518,7 @@
       "required": true,
       "types": [
         {
-          "type": "directive",
+          "type": "script",
           "named": true
         },
         {
@@ -565,6 +527,16 @@
         }
       ]
     }
+  },
+  {
+    "type": "maximize",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "minimize",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "minus",
@@ -619,7 +591,21 @@
   {
     "type": "optimization",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "maximize",
+          "named": true
+        },
+        {
+          "type": "minimize",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "optimize_weight",
@@ -714,7 +700,7 @@
       "required": true,
       "types": [
         {
-          "type": "directive",
+          "type": "script",
           "named": true
         },
         {
@@ -780,10 +766,6 @@
           "named": true
         },
         {
-          "type": "theory_statement",
-          "named": true
-        },
-        {
           "type": "weak_constraint",
           "named": true
         }
@@ -823,7 +805,23 @@
           "named": true
         },
         {
-          "type": "directive",
+          "type": "const",
+          "named": true
+        },
+        {
+          "type": "defined",
+          "named": true
+        },
+        {
+          "type": "edge",
+          "named": true
+        },
+        {
+          "type": "external",
+          "named": true
+        },
+        {
+          "type": "heuristic",
           "named": true
         },
         {
@@ -831,7 +829,15 @@
           "named": true
         },
         {
+          "type": "include",
+          "named": true
+        },
+        {
           "type": "modifier",
+          "named": true
+        },
+        {
+          "type": "optimization",
           "named": true
         },
         {
@@ -840,6 +846,18 @@
         },
         {
           "type": "priority",
+          "named": true
+        },
+        {
+          "type": "program",
+          "named": true
+        },
+        {
+          "type": "project",
+          "named": true
+        },
+        {
+          "type": "show",
           "named": true
         },
         {
@@ -852,6 +870,14 @@
         },
         {
           "type": "terms",
+          "named": true
+        },
+        {
+          "type": "theory",
+          "named": true
+        },
+        {
+          "type": "theory_definitions",
           "named": true
         }
       ]
@@ -1132,29 +1158,6 @@
     }
   },
   {
-    "type": "theory_statement",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "directive",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "theory_definitions",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "theory_term",
     "named": true,
     "fields": {},
@@ -1363,19 +1366,23 @@
     "named": false
   },
   {
-    "type": "#",
-    "named": false
-  },
-  {
     "type": "#end.",
     "named": false
   },
   {
-    "type": "#false",
+    "type": "#maximise",
     "named": false
   },
   {
-    "type": "#true",
+    "type": "#maximize",
+    "named": false
+  },
+  {
+    "type": "#minimise",
+    "named": false
+  },
+  {
+    "type": "#minimize",
     "named": false
   },
   {
@@ -1524,7 +1531,7 @@
   },
   {
     "type": "count",
-    "named": false
+    "named": true
   },
   {
     "type": "default",
@@ -1544,6 +1551,10 @@
   },
   {
     "type": "external",
+    "named": true
+  },
+  {
+    "type": "false",
     "named": true
   },
   {
@@ -1568,27 +1579,11 @@
   },
   {
     "type": "max",
-    "named": false
-  },
-  {
-    "type": "maximise",
-    "named": false
-  },
-  {
-    "type": "maximize",
-    "named": false
+    "named": true
   },
   {
     "type": "min",
-    "named": false
-  },
-  {
-    "type": "minimise",
-    "named": false
-  },
-  {
-    "type": "minimize",
-    "named": false
+    "named": true
   },
   {
     "type": "not",
@@ -1620,11 +1615,11 @@
   },
   {
     "type": "sum",
-    "named": false
+    "named": true
   },
   {
-    "type": "sum+",
-    "named": false
+    "type": "sum_plus",
+    "named": true
   },
   {
     "type": "supremum",
@@ -1636,6 +1631,10 @@
   },
   {
     "type": "theory_term_identifier",
+    "named": true
+  },
+  {
+    "type": "true",
     "named": true
   },
   {

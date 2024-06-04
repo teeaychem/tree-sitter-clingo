@@ -78,8 +78,7 @@ module.exports = grammar({
                                       $.comment,
                                       $.weak_constraint,
                                       $.statement,
-                                      $._script,
-                                      $.theory_statement)),
+                                      $._script)),
 
             /* rules */
       fact: $ => seq($._head, '.'),
@@ -166,13 +165,16 @@ module.exports = grammar({
       // instead, easy to check whether condition follows
       literal: $ => seq(optional($.default_negation),
                         optional($.default_negation),
-                        choice($.boolean,
+                        choice($.true,
+                               $.false,
                                $.atom,
                                $.comparison)),
 
       _literals: $ => seq(repeat(seq($.literal, ',')), $.literal),
 
-      boolean: $ => choice('#true', '#false'),
+      true: $ => '#true',
+
+      false: $ => '#false',
 
       _arithmetic_function: $ => choice($.plus,
                                         $.minus,
@@ -231,9 +233,17 @@ module.exports = grammar({
       conditional_literal: $ => seq($.literal, $.condition),
 
       /* aggregates start */
-      _aggregate_function_directive: $ => seq('#', $.aggregate_function),
+      sum: $ => '#sum',
 
-      aggregate_function: $ => choice('sum', 'sum+', 'min', 'max', 'count'),
+      sum_plus: $ => '#sum+',
+
+      min: $ => '#min',
+
+      max: $ => '#max',
+
+      count: $ => '#count',
+
+      aggregate_function: $ => choice($.sum, $.sum_plus, $.min, $.max, $.count),
 
       _body_aggregate_element: $ => choice($.condition,
                                            seq($.terms, optional($.condition))),
@@ -244,7 +254,7 @@ module.exports = grammar({
           choice(seq('{',
                      optional(seq(repeat(seq($._optional_conditional_literal, ';')), $._optional_conditional_literal,)),
                      '}'),
-                 seq(alias($._aggregate_function_directive, $.directive),
+                 seq($.aggregate_function,
                      '{',
                      optional(seq(repeat(seq($._body_aggregate_element, ';')), $._body_aggregate_element)),
                      '}')),
@@ -258,7 +268,7 @@ module.exports = grammar({
       _head_aggregate: $ => seq(
           optional($.lower_guard),
           choice(seq('{', '}'),
-                 seq(alias($._aggregate_function_directive, $.directive),
+                 seq($.aggregate_function,
                      '{', optional($._head_aggregate_elements), '}'),
                  seq('{', $._althead_aggregate_elements, '}')),
           optional($.upper_guard)),
@@ -282,12 +292,14 @@ module.exports = grammar({
 
       optimize_weight: $ => seq($.weight, optional($.priority)),
 
-      _optimize_directive: $ => seq('#', $.optimization),
+      maximize: $ => choice('#maximize', '#maximise'),
 
-      optimization: $ => choice('maximize', 'minimize', 'maximise', 'minimise'),
+      minimize: $ => choice('#minimize', '#minimise'),
+
+      optimization: $ => choice($.maximize, $.minimize),
 
       _optimize_statement: $ => seq(
-          alias($._optimize_directive, $.directive),
+          $.optimization,
           '{',
           optional(seq($.optimize_weight,
                        ',',
@@ -311,35 +323,30 @@ module.exports = grammar({
                              $._include_statement,
                              $._program_statement,
                              $._external_statement,
-                             $._optimize_statement),
+                             $._optimize_statement,
+                             $._theory_statement),
 
-      _show_directive: $ => seq('#', $.show),
-
-      show: $ => 'show',
+      show: $ => '#show',
 
       arity: $ => $.number,
 
       _show_statement: $ => seq(choice($._show_statement_atom,
                                        $._show_statement_term)),
 
-      _show_statement_atom: $ => seq(alias($._show_directive, $.directive),
+      _show_statement_atom: $ => seq($.show,
                                      optional($.classical_negation), $.identifier, '/', $.arity, '.'),
 
-      _show_statement_term: $ => seq(alias($._show_directive, $.directive),
+      _show_statement_term: $ => seq($.show,
                                      optional(seq($.term, optional(seq(':', alias($._body, $.body))))), '.'),
 
-      _defined_directive: $ => seq('#', $.defined),
+      defined: $ => '#defined',
 
-      defined: $ => 'defined',
-
-      _defined_statement: $ => seq(alias($._defined_directive, $.directive),
+      _defined_statement: $ => seq($.defined,
                                    optional($.classical_negation), $.identifier, '/', $.arity, '.'),
 
-      _edge_directive: $ => seq('#', $.edge),
+      edge: $ => '#edge',
 
-      edge: $ => 'edge',
-
-      _edge_statement: $ => seq(alias($._edge_directive, $.directive),
+      _edge_statement: $ => seq($.edge,
                                '(', seq(repeat(seq($.term, ',', $.term, ';')), $.term, ',', $.term), ')',
                                optional(seq(':', optional(alias($._body, $.body)))),  '.'),
 
@@ -351,51 +358,39 @@ module.exports = grammar({
 
       modifier: $ => $.term,
 
-      _heuristic_directive: $ => seq('#', $.heuristic),
+      heuristic: $ => '#heuristic',
 
-      heuristic: $ => 'heuristic',
-
-      _heuristic_statement: $ => seq(alias($._heuristic_directive, $.directive),
+      _heuristic_statement: $ => seq($.heuristic,
                                      $.atom, optional(seq(':', optional(alias($._body, $.body)))), '.',
                                     '[', $.bias, optional($.priority), ',', $.modifier, ']'),
 
-      _project_directive: $ => seq('#', $.project),
+      project: $ => '#project',
 
-      project: $ => 'project',
-
-      _projection_statement: $ => seq(alias($._project_directive, $.directive),
+      _projection_statement: $ => seq($.project,
                                       choice(seq(optional($.classical_negation), $.identifier, '/', $.arity, '.'),
                                              seq($.atom, optional(seq(':', optional(alias($._body, $.body)))),  '.'))),
 
-      _const_directive: $ => seq('#', $.const),
+      const: $ => '#const',
 
-      const: $ => 'const',
+      _const_statement: $ => seq($.const,
+                                 $.identifier, '=', $.term, '.',
+                                 optional(seq('[', choice('default', 'override'), ']'))),
 
-      _const_statement: $ => seq(alias($._const_directive, $.directive),
-                                $.identifier, '=', $.term, '.',
-                                optional(seq('[', choice('default', 'override'), ']'))),
+      include: $ => '#include',
 
-       _include_directive: $ => seq('#', $.include),
+      _include_statement: $ => seq($.include,
+                                   choice($.string, seq('<', $.identifier, '>')), '.'),
 
-      include: $ => 'include',
+      program: $ => '#program',
 
-      _include_statement: $ => seq(alias($._include_directive, $.directive),
-                                  choice($.string, seq('<', $.identifier, '>')), '.'),
-
-      _program_directive: $ => seq('#', $.program),
-
-      program: $ => 'program',
-
-      _program_statement: $ => seq(alias($._program_directive, $.directive),
+      _program_statement: $ => seq($.program,
                                 $.identifier, optional(seq('(', optional(seq(repeat(seq($.identifier, ',')), $.identifier)), ')')),'.'),
 
-       _external_directive: $ => seq('#', $.external),
+      external: $ => '#external',
 
-      external: $ => 'external',
-
-      _external_statement: $ => seq(alias($._external_directive, $.directive),
-                                   $.atom, optional(seq(':', optional(alias($._body, $.body)))), '.',
-                                   optional(seq('[', $.term, ']'))),
+      _external_statement: $ => seq($.external,
+                                    $.atom, optional(seq(':', optional(alias($._body, $.body)))), '.',
+                                    optional(seq('[', $.term, ']'))),
 
       /* script stuff */
       _script: $ => choice(
@@ -403,16 +398,14 @@ module.exports = grammar({
           $.lua
       ),
 
-      _script_directive: $ => seq('#', $.script),
-
-      script: $ => 'script',
+      script: $ => '#script',
 
       script_contents: $ => /(?:(?:[^#])|(?:#[^e])|(?:#e[^n])|(?:#en[^d])|(?:#end[^\.]))+/,
 
-      python: $ => seq(alias($._script_directive, $.directive),
+      python: $ => seq($.script,
                        '(python)', $.script_contents, '#end\.'),
 
-      lua: $ => seq(alias($._script_directive, $.directive),
+      lua: $ => seq($.script,
                     '(lua)', $.script_contents, '#end\.'),
 
       /* script stuff end */
@@ -486,11 +479,9 @@ module.exports = grammar({
                                                           $.theory_term_definition), ';')), choice($.theory_atom_definition,
                                                                                                    $.theory_term_definition)),
 
-      _theory_directive: $ => seq('#', $.theory),
+      theory: $ => '#theory',
 
-      theory: $ => 'theory',
-
-      theory_statement: $ => seq(alias($._theory_directive, $.directive),
+      _theory_statement: $ => seq($.theory,
                                  $.identifier, '{', optional($.theory_definitions), '}', '.'),
 
       /* other */
