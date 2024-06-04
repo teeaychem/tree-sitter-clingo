@@ -30,3 +30,25 @@ grid(1..S,Y) :- X = 1..S, Y = 1..S - 1, size(S).
           (atom (function
                   (identifier)
                   (terms (term (variable)))))))))
+
+
+===========================
+EQEQ (15puzzle/encoding.lp)
+===========================
+
+0 { move(t,A,B) : n(A,B) } 1 :- move(t,B,_), consecutive == 1.
+
+---
+
+(source_file
+  (rule
+    (head
+      (aggregate
+        (lower_guard (term (number)))
+        (literal (atom (function (identifier) (terms (term (function (identifier))) (term (variable)) (term (variable))))))
+        (condition
+          (literal (atom (function (identifier) (terms (term (variable)) (term (variable)))))))
+        (upper_guard (term (number)))))
+    (body
+      (literal (atom (function (identifier) (terms (term (function (identifier))) (term (variable)) (term)))))
+      (literal (comparison (term (function (identifier))) (comparison_predicate) (term (number)))))))

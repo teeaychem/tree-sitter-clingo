@@ -16,12 +16,12 @@ Heuristic (priority.lp)
   (statement
     (directive (heuristic))
     (atom (function (identifier)))
-    (weight (term (number)))
+    (bias (term (number)))
     (modifier (term (function (identifier)))))
   (statement
     (directive (heuristic))
     (atom (function (identifier)))
-    (weight (term (number)))
+    (bias (term (number)))
     (modifier (term (function (identifier)))))
   (fact
     (aggregate
@@ -34,14 +34,14 @@ Heuristic (priority.lp)
   (statement
     (directive (heuristic))
     (atom (function (identifier)))
-    (weight (term (number)))
+    (bias (term (number)))
     (priority (term (number)))
     (modifier (term (function (identifier)))))
   (statement
     (directive (heuristic))
     (atom (function (identifier)))
     (body (literal (default_negation) (atom (function (identifier)))))
-    (weight (term (minus (term (number)))))
+    (bias (term (minus (term (number)))))
     (priority (term (number)))
     (modifier (term (function (identifier))))))
 
@@ -61,6 +61,7 @@ Program (basic.lp)
     (literal (default_negation) (atom (function (identifier) (terms (term (variable))))))
     (literal (atom (function (identifier) (terms (term (variable))))))))
 
+
 ================
 Const (const.lp)
 ================
@@ -68,7 +69,6 @@ Const (const.lp)
 #const x = 42.
 #const y = f(x,z).
 p(x,y).
-
 
 ---
 
@@ -90,7 +90,6 @@ p(1). p(2). p(3).
 #external q(X) : p(X).
 q(1).
 r(X) :- q(X).
-
 
 ---
 
@@ -158,6 +157,7 @@ Show empty
 (source_file
   (statement (directive (show))))
 
+
 =========
 Show term
 =========
@@ -170,6 +170,7 @@ Show term
   (statement (directive (show))
     (term (function (identifier)))
     (body (literal (atom (function (identifier)))) (literal (atom (function (identifier)))))))
+
 
 ==================
 Python (gcd-py.lp)
