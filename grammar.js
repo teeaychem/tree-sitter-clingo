@@ -47,25 +47,25 @@ module.exports = grammar({
         [$.modulo, $.interval],
         [$.power, $.interval],
         // every arithmetic or bitwise function over lower guard
-        [$.minus, $.lower_guard],
-        [$.bitor, $.lower_guard],
-        [$.bitxor, $.lower_guard],
-        [$.bitand, $.lower_guard],
-        [$.times, $.lower_guard],
-        [$.plus, $.lower_guard],
-        [$.divide, $.lower_guard],
-        [$.modulo, $.lower_guard],
-        [$.power, $.lower_guard],
+        [$.minus, $.left_guard],
+        [$.bitor, $.left_guard],
+        [$.bitxor, $.left_guard],
+        [$.bitand, $.left_guard],
+        [$.times, $.left_guard],
+        [$.plus, $.left_guard],
+        [$.divide, $.left_guard],
+        [$.modulo, $.left_guard],
+        [$.power, $.left_guard],
         // every arithmetic or bitwise function over upper guard
-        [$.minus, $.upper_guard],
-        [$.bitor, $.upper_guard],
-        [$.bitxor, $.upper_guard],
-        [$.bitand, $.upper_guard],
-        [$.times, $.upper_guard],
-        [$.plus, $.upper_guard],
-        [$.divide, $.upper_guard],
-        [$.modulo, $.upper_guard],
-        [$.power, $.upper_guard],
+        [$.minus, $.right_guard],
+        [$.bitor, $.right_guard],
+        [$.bitxor, $.right_guard],
+        [$.bitand, $.right_guard],
+        [$.times, $.right_guard],
+        [$.plus, $.right_guard],
+        [$.divide, $.right_guard],
+        [$.modulo, $.right_guard],
+        [$.power, $.right_guard],
         //
         [$.integrity_constraint, $.rule]
     ],
@@ -80,7 +80,7 @@ module.exports = grammar({
                                       $.statement,
                                       $._script)),
 
-            /* rules */
+      /* rules */
       fact: $ => seq($._head, '.'),
 
       integrity_constraint: $ => seq(':-', $._body, '.'),
@@ -214,11 +214,13 @@ module.exports = grammar({
 
       absolute: $ => seq('|', seq(repeat(seq($.term, ';')), $.term), '|'),
 
-      comparison_predicate: $ => choice('=', '!=', '<', '<=', '>', '>=', '=='),
+      comparison_predicate: $ => choice('!=', '<', '<=', '>', '>=', '=='),
 
-      lower_guard: $ => seq($.term, optional($.comparison_predicate)),
+      // AST
+      left_guard: $ => seq($.term, optional($.comparison_predicate)),
 
-      upper_guard: $ => seq(optional($.comparison_predicate), $.term),
+      // AST
+      right_guard: $ => seq(optional($.comparison_predicate), $.term),
 
       comparison: $ => seq($.term,
                            $.comparison_predicate,
@@ -250,7 +252,7 @@ module.exports = grammar({
 
       _body_aggregate: $ =>
       seq(
-          optional($.lower_guard),
+          optional($.left_guard),
           choice(seq('{',
                      optional(seq(repeat(seq($._optional_conditional_literal, ';')), $._optional_conditional_literal,)),
                      '}'),
@@ -258,7 +260,7 @@ module.exports = grammar({
                      '{',
                      optional(seq(repeat(seq($._body_aggregate_element, ';')), $._body_aggregate_element)),
                      '}')),
-          optional($.upper_guard),
+          optional($.right_guard),
       ),
 
       _head_aggregate_elements: $ => seq(optional($.terms), ':', $._optional_conditional_literal, repeat(seq(';', optional($.terms), ':', $._optional_conditional_literal))),
@@ -266,12 +268,12 @@ module.exports = grammar({
       _althead_aggregate_elements: $ => seq(repeat(seq($._optional_conditional_literal, ';')), $._optional_conditional_literal),
 
       _head_aggregate: $ => seq(
-          optional($.lower_guard),
+          optional($.left_guard),
           choice(seq('{', '}'),
                  seq($.aggregate_function,
                      '{', optional($._head_aggregate_elements), '}'),
                  seq('{', $._althead_aggregate_elements, '}')),
-          optional($.upper_guard)),
+          optional($.right_guard)),
 
       /* aggregates end */
 
